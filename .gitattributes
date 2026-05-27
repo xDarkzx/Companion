@@ -1,0 +1,14 @@
+# Normalize to LF so code runs identically on Linux (Pi / WSL2) when authored on Windows.
+* text=auto eol=lf
+
+# Explicitly treat these as binary (never touch line endings)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.pdf binary
