@@ -2,6 +2,7 @@
 import time
 import unittest
 
+from companion_interfaces.msg import RobotEmotion
 import launch
 import launch_ros.actions
 import launch_testing.actions
@@ -9,22 +10,20 @@ import pytest
 import rclpy
 from rclpy.node import Node
 
-from companion_interfaces.msg import RobotEmotion
-
 
 @pytest.mark.launch_test
 def generate_test_description():
     """Launch the brain and face nodes for the test."""
     brain = launch_ros.actions.Node(
-        package="companion_brain",
-        executable="heartbeat_node",
-        name="heartbeat_node",
-        parameters=[{"publish_rate_hz": 5.0}],
+        package='companion_brain',
+        executable='heartbeat_node',
+        name='heartbeat_node',
+        parameters=[{'publish_rate_hz': 5.0}],
     )
     face = launch_ros.actions.Node(
-        package="companion_face",
-        executable="face_stub_node",
-        name="face_stub_node",
+        package='companion_face',
+        executable='face_stub_node',
+        name='face_stub_node',
     )
     return (
         launch.LaunchDescription([brain, face, launch_testing.actions.ReadyToTest()]),
@@ -47,11 +46,11 @@ class TestEmotionFlows(unittest.TestCase):
 
     def setUp(self):
         """Create a listener node that records received emotions."""
-        self.node = Node("test_listener")
+        self.node = Node('test_listener')
         self.received = []
         self.node.create_subscription(
             RobotEmotion,
-            "/companion/robot_emotion",
+            '/companion/robot_emotion',
             lambda msg: self.received.append(msg),
             10,
         )
@@ -61,12 +60,12 @@ class TestEmotionFlows(unittest.TestCase):
         self.node.destroy_node()
 
     def test_robot_emotion_is_published(self):
-        """At least one RobotEmotion with a known label arrives within 10s."""
+        """Assert a known RobotEmotion arrives within 10 seconds."""
         deadline = time.time() + 10.0
         while time.time() < deadline and not self.received:
             rclpy.spin_once(self.node, timeout_sec=0.5)
         self.assertGreater(
-            len(self.received), 0, "No RobotEmotion received within 10s"
+            len(self.received), 0, 'No RobotEmotion received within 10s'
         )
-        expected = {"neutral", "happy", "sad", "angry", "love"}
+        expected = {'neutral', 'happy', 'sad', 'angry', 'love'}
         self.assertIn(self.received[0].emotion, expected)

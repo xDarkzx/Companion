@@ -22,13 +22,13 @@ _Update this after every meaningful chunk of work. This is how we stay on path._
 - [x] ament `flake8` + `pep257` lint tests authored — *written*
 - [x] WSL2 + Pi setup steps documented (`docs/SETUP.md`)
 
-### ⏳ Pending verification on Linux (WSL2/Pi — cannot run on Windows)
+### ✅ Verified on Linux (WSL2, ROS 2 Jazzy) — 2026-05-27
 
-- [ ] `colcon build` clean (WSL2)
-- [ ] `colcon test` green (lint + 800-guard + unit + integration)
-- [ ] `ros2 launch companion_bringup demo.launch.py` shows live brain → face
-- [ ] WSL2 setup steps run end-to-end (verified, not just documented)
-- [ ] **Phase 1 exit criteria met** (see roadmap)
+- [x] ROS 2 Jazzy installed in WSL2 (Ubuntu 24.04) via `scripts/wsl_install_ros2.sh`
+- [x] `colcon build` clean — all 4 packages
+- [x] `colcon test` green — **12 tests, 0 errors, 0 failures** (flake8 + pep257 + unit + launch integration)
+- [x] `ros2 launch companion_bringup demo.launch.py` shows live brain → face emotion flow
+- [x] **🎉 Phase 1 exit criteria MET — foundation complete**
 
 ## Decision log
 
@@ -43,6 +43,19 @@ _Update this after every meaningful chunk of work. This is how we stay on path._
 | 2026-05-27 | Two messages: `RobotEmotion` + `HumanEmotion` | Clean producers/consumers; MOAT rail ready |
 | 2026-05-27 | **Body = Freenove Robot Dog Kit** (Pi-driven) | Least-glue body; Pi stays the brain; no architecture change |
 | 2026-05-27 | Renamed project `HexoSpider` → **`Companion`** (`companion_*`) | Body-agnostic name; never feels wrong as the body changes |
+
+## Parked for later phases (recorded so we don't lose them — NOT built now)
+
+- **Locomotion (later phase):** wrap **Freenove's built-in IK/gait library** as a ROS 2
+  node subscribing to a velocity/command topic. **Do NOT use Isaac Sim / RL** — the
+  Freenove dog is hobby position-servo hardware (no torque control / joint feedback), so
+  learned policies won't transfer (huge sim-to-real gap) and need an RTX GPU. Isaac/RL is
+  only worth it for torque-controlled research robots, not this body.
+- **Perception AI (Phase 3):** YOLO (person/object detection) + a face-emotion model for
+  the MOAT. Run inference on the **Hailo 13-TOPS hat** (its model zoo + compiler) or
+  ONNX/TFLite. These are downloaded/converted models — no training rig to begin. Good job
+  for parallel agents *when we reach Phase 3*.
+- **Fine-tuning (Phase 4):** the place for any custom model training/data pipeline.
 
 ## Notes / open questions
 

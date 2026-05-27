@@ -9,20 +9,20 @@ from launch_ros.actions import Node
 def generate_launch_description():
     """Start heartbeat_node and face_stub_node with the demo parameters."""
     config = os.path.join(
-        get_package_share_directory("companion_bringup"), "config", "demo.yaml"
+        get_package_share_directory('companion_bringup'), 'config', 'demo.yaml'
     )
     return LaunchDescription([
         Node(
-            package="companion_brain",
-            executable="heartbeat_node",
-            name="heartbeat_node",
+            package='companion_brain',
+            executable='heartbeat_node',
+            name='heartbeat_node',
             parameters=[config],
-            output="screen",
+            output='screen',
         ),
         Node(
-            package="companion_face",
-            executable="face_stub_node",
-            name="face_stub_node",
-            output="screen",
+            package='companion_face',
+            executable='face_stub_node',
+            name='face_stub_node',
+            output='screen',
         ),
     ])
