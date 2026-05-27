@@ -33,17 +33,22 @@ Companion/
 └─ tools/                    ← helper scripts (e.g. 800-line guard)
 ```
 
-## Quickstart (filled in during Phase 1 implementation)
+## Setup & quickstart
+
+Full step-by-step install for **WSL2** and the **Pi** is in
+[`docs/SETUP.md`](docs/SETUP.md). Once ROS 2 Jazzy is installed:
 
 ```bash
 cd ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
 colcon build
 source install/setup.bash
-ros2 launch companion_bringup demo.launch.py
+colcon test && colcon test-result --verbose   # lint + unit + integration
+ros2 launch companion_bringup demo.launch.py   # see the brain + face talk
 ```
 
-> Full WSL2 and Raspberry Pi setup steps will be added to this README as Phase 1 is
-> implemented.
+> **Note:** ROS 2 runs on **Linux only** — build/run these in WSL2 or on the Pi, not in
+> native Windows. The 800-line guard (`python tools/check_file_length.py .`) runs anywhere.
 
 ## Rules
 

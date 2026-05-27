@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>companion_bringup</name>
+  <version>0.1.0</version>
+  <description>Launch files and configuration to bring up the Companion robot.</description>
+  <maintainer email="dkstudiosnz@gmail.com">Dan</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>companion_brain</exec_depend>
+  <exec_depend>companion_face</exec_depend>
+  <exec_depend>companion_interfaces</exec_depend>
+
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>launch_testing</test_depend>
+  <test_depend>launch_testing_ros</test_depend>
+  <test_depend>rclpy</test_depend>
+  <test_depend>companion_interfaces</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

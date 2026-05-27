@@ -11,17 +11,23 @@ _Update this after every meaningful chunk of work. This is how we stay on path._
 - [x] Design approved
 - [x] Documentation scaffolded (`CLAUDE.md`, `README.md`, roadmap, this tracker, spec)
 - [x] Folder structure created
-- [ ] Implementation plan written (`writing-plans`)
-- [ ] `companion_interfaces`: `RobotEmotion.msg` + `HumanEmotion.msg` build
-- [ ] `tools/check_file_length.py` (800-line guard) + its test
-- [ ] `companion_brain`: `heartbeat_node.py` stub (publishes RobotEmotion)
-- [ ] `companion_face`: `face_stub_node.py` stub (logs RobotEmotion)
-- [ ] `companion_bringup`: `demo.launch.py` + `config/*.yaml`
-- [ ] Unit tests (emotion-cycling logic) green
-- [ ] `launch_testing` integration test green
-- [ ] Linters green (`ament_flake8`, `ament_pep257`)
-- [ ] WSL2 setup steps documented + verified
-- [ ] Pi setup steps documented
+- [x] Implementation plan written (`docs/superpowers/plans/2026-05-27-ros2-foundation.md`)
+- [x] `tools/check_file_length.py` (800-line guard) + tests — **✅ verified on Windows (7/7); repo passes**
+- [x] `companion_brain` emotion-cycling pure logic + tests — **✅ verified on Windows (5/5)**
+- [x] `companion_interfaces`: `RobotEmotion.msg` + `HumanEmotion.msg` (+ package.xml/CMake) — *written*
+- [x] `companion_brain`: `heartbeat_node.py` stub (publishes RobotEmotion) — *written*
+- [x] `companion_face`: `face_stub_node.py` stub (logs RobotEmotion) — *written*
+- [x] `companion_bringup`: `demo.launch.py` + `config/demo.yaml` — *written*
+- [x] `launch_testing` integration test authored — *written*
+- [x] ament `flake8` + `pep257` lint tests authored — *written*
+- [x] WSL2 + Pi setup steps documented (`docs/SETUP.md`)
+
+### ⏳ Pending verification on Linux (WSL2/Pi — cannot run on Windows)
+
+- [ ] `colcon build` clean (WSL2)
+- [ ] `colcon test` green (lint + 800-guard + unit + integration)
+- [ ] `ros2 launch companion_bringup demo.launch.py` shows live brain → face
+- [ ] WSL2 setup steps run end-to-end (verified, not just documented)
 - [ ] **Phase 1 exit criteria met** (see roadmap)
 
 ## Decision log

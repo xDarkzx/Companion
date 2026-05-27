@@ -1,0 +1,6 @@
+# Parameters for the Phase 1 demo nodes. Edit values here, not in code.
+heartbeat_node:
+  ros__parameters:
+    publish_rate_hz: 1.0
+    emotion_sequence: ["neutral", "happy", "sad", "angry", "love"]
+    intensity: 0.8
