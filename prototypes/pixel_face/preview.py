@@ -18,6 +18,7 @@ import face_pixels as fp
 
 SCALE = 2
 COLORS = [(60, 220, 255), (120, 255, 200), (255, 190, 90), (255, 120, 200), (235, 245, 255)]
+BLINK_DUR = 0.22  # seconds for a full close-and-open blink
 
 
 def main():
@@ -58,11 +59,15 @@ def main():
             mood_i = (mood_i + 1) % len(moods)
             auto_next = now + 5.0
         if now >= next_blink and now > blink_until:
-            blink_until = now + 0.12
+            blink_until = now + BLINK_DUR
             next_blink = now + random.uniform(2.0, 6.0)
-        closed = now < blink_until
+        if now < blink_until:
+            phase = 1.0 - (blink_until - now) / BLINK_DUR  # 0 -> 1 across the blink
+            openness = abs(phase * 2.0 - 1.0)              # open -> closed -> open
+        else:
+            openness = 1.0
 
-        fp.draw_face(base, moods[mood_i], closed=closed, color=COLORS[color_i])
+        fp.draw_face(base, moods[mood_i], openness=openness, color=COLORS[color_i])
         screen.blit(pygame.transform.scale(base, screen.get_size()), (0, 0))
         pygame.display.set_caption(
             f'Companion pixel face: {moods[mood_i]}   [<-/-> emotion, 1-9 pick, C colour, ESC quit]'

@@ -25,8 +25,9 @@ def main():
         fp.draw_face(canvas, mood)
         pygame.image.save(canvas, str(OUT / f'{mood}.png'))
         print('wrote', mood)
-    fp.draw_face(canvas, 'neutral', closed=True)
-    pygame.image.save(canvas, str(OUT / 'blink.png'))
+    for o in (0.6, 0.3, 0.0):
+        fp.draw_face(canvas, 'neutral', openness=o)
+        pygame.image.save(canvas, str(OUT / f'blink_{o}.png'))
     pygame.quit()
 
 
