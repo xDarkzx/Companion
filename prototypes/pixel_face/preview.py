@@ -32,6 +32,7 @@ def main():
     now = time.time()
     next_blink = now + random.uniform(2.0, 6.0)
     blink_until = 0.0
+    auto_next = now + 5.0
 
     running = True
     while running:
@@ -53,6 +54,9 @@ def main():
                     if idx < len(moods):
                         mood_i = idx
 
+        if now >= auto_next:
+            mood_i = (mood_i + 1) % len(moods)
+            auto_next = now + 5.0
         if now >= next_blink and now > blink_until:
             blink_until = now + 0.12
             next_blink = now + random.uniform(2.0, 6.0)

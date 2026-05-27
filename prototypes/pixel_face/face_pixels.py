@@ -164,18 +164,24 @@ def _place(cells, width, height, center, mirror=False):
 
 
 def _blit_cells(surface, cells, color):
-    """Draw each lit grid cell as a crisp rounded square (LED-style)."""
+    """Draw each lit grid cell as a flat, contiguous square pixel (LCD-style)."""
     for c, r in cells:
         if 0 <= c < GRID_W and 0 <= r < GRID_H:
-            pygame.draw.rect(
-                surface, color,
-                (c * CELL + GAP // 2, r * CELL + GAP // 2, CELL - GAP, CELL - GAP),
-                border_radius=3,
-            )
+            pygame.draw.rect(surface, color, (c * CELL, r * CELL, CELL, CELL))
+
+
+def _blur(surf, factor=0.22):
+    """Down/up-scale to make the soft glow halo (used behind the crisp pixels)."""
+    w, h = surf.get_size()
+    small = pygame.transform.smoothscale(surf, (max(1, int(w * factor)), max(1, int(h * factor))))
+    return pygame.transform.smoothscale(small, (w, h))
 
 
 def draw_face(surface, mood, closed=False, color=DEFAULT_COLOR):
-    """Render the face for `mood` (or a blink when closed=True) onto `surface`."""
+    """Render the face for `mood` (or a blink when closed=True) onto `surface`.
+
+    Crisp square pixels with a soft glow halo radiating behind them.
+    """
     surface.fill(BG)
     if closed:
         left_bm = right_bm = _CLOSED
@@ -185,4 +191,9 @@ def draw_face(surface, mood, closed=False, color=DEFAULT_COLOR):
     lc, lw, lh = _parse(left_bm)
     rc, rw, rh = _parse(right_bm)
     cells = _place(lc, lw, lh, LEFT_CENTER) | _place(rc, rw, rh, RIGHT_CENTER, mirror=True)
-    _blit_cells(surface, cells, color)
+    layer = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+    _blit_cells(layer, cells, color)
+    glow = _blur(layer)
+    surface.blit(glow, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+    surface.blit(glow, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+    surface.blit(layer, (0, 0))
