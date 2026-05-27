@@ -1,12 +1,12 @@
-# HexoSpider 🕷️🤖💚
+# Companion 🤖💚
 
 An **emotion-aware AI robot companion**. It shows feelings on an animated face, and
 — the differentiator — it senses when *you* are upset, sad, or need cheering up, and
 responds with empathy.
 
 The **Raspberry Pi 5 is always the brain** (ROS 2 + AI + face + empathy logic). The
-**body is swappable** (hexapod, robot dog, ESP32-driven, etc.) — it's just another
-node that plugs into the same backbone.
+**body is swappable** — currently a **Freenove Robot Dog Kit** (Pi-driven) — it's just
+another node that plugs into the same backbone.
 
 ## Status
 
@@ -22,14 +22,14 @@ status and [`docs/ROADMAP.md`](docs/ROADMAP.md) for the full plan.
 ## Repository layout
 
 ```
-HexoSpider/
+Companion/
 ├─ CLAUDE.md                 ← project rules (read this first)
 ├─ docs/                     ← roadmap, progress, design specs
 ├─ ros2_ws/src/              ← ROS 2 packages
-│  ├─ hexospider_interfaces/ ← message contracts
-│  ├─ hexospider_bringup/    ← launch files + config
-│  ├─ hexospider_brain/      ← personality/empathy (stub in Phase 1)
-│  └─ hexospider_face/       ← face renderer (stub in Phase 1)
+│  ├─ companion_interfaces/ ← message contracts
+│  ├─ companion_bringup/    ← launch files + config
+│  ├─ companion_brain/      ← personality/empathy (stub in Phase 1)
+│  └─ companion_face/       ← face renderer (stub in Phase 1)
 └─ tools/                    ← helper scripts (e.g. 800-line guard)
 ```
 
@@ -39,7 +39,7 @@ HexoSpider/
 cd ros2_ws
 colcon build
 source install/setup.bash
-ros2 launch hexospider_bringup demo.launch.py
+ros2 launch companion_bringup demo.launch.py
 ```
 
 > Full WSL2 and Raspberry Pi setup steps will be added to this README as Phase 1 is

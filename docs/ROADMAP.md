@@ -1,4 +1,4 @@
-# HexoSpider Roadmap
+# Companion Roadmap
 
 _Last updated: 2026-05-27_
 
@@ -25,14 +25,18 @@ sad, cheering you up, celebrating with you.
 | Raspberry Pi 5 | ✅ have |
 | GPIO LCD screen (for the face) | ✅ have (testing) |
 | 13-TOPS Hailo AI HAT+ (vision) | 🛒 planned (Phase 3) |
-| Robot body (hexapod **or** robot dog) | 🤔 deciding — see note |
+| **Body: Freenove Robot Dog Kit for Pi** (walking, self-balancing, face recognition, ball tracing, ultrasonic) | ✅ **decided** (buying) |
+| Vision camera (upgrade) | 🛒 planned (Phase 3) |
+| LCD screen for the face (upgrade) | 🛒 planned (Phase 2) |
 | ESP32 secondary screen | 🤔 maybe |
 | Speaker / mic | 🛒 planned (audio) |
 
-> **Body note:** A **Pi-driven body** (e.g. Freenove Robot Dog) fits the plan with
-> the least glue. An **ESP32 body** (e.g. Hiwonder MechDog) can't run ROS 2/AI — it
-> becomes a body the Pi commands over WiFi/serial via `micro-ROS`. Decision deferred
-> to Phase 3; **does not affect Phases 1–2.**
+> **Body decision (2026-05-27):** the **Freenove Robot Dog Kit** (Raspberry-Pi-driven)
+> is the chosen body — the least-glue option, since the Pi 5 stays the brain and drives
+> the legs directly. Upgrades to follow: vision camera, LCD face screen, AI hat. This
+> choice required **no architectural change** — the body is just a locomotion node. A
+> future swap (e.g. an ESP32 body via `micro-ROS`) remains possible without touching the
+> brain/face.
 
 ## The subsystems
 
@@ -52,7 +56,7 @@ Build the clean, modular ROS 2 backbone everything plugs into, with quality
 guardrails baked in. Two stub nodes prove the pipeline end-to-end (no hardware).
 - **Spec:** `docs/superpowers/specs/2026-05-27-ros2-foundation-design.md`
 - **Exit criteria:** `colcon build` clean → `colcon test` green (lint + 800-line
-  guard + unit + integration) → `ros2 launch hexospider_bringup demo.launch.py`
+  guard + unit + integration) → `ros2 launch companion_bringup demo.launch.py`
   shows the Brain emitting emotions and the Face logging them live → committed to git.
 
 ### Phase 2 — Emotional Face

@@ -1,4 +1,4 @@
-# hexospider_interfaces
+# companion_interfaces
 
 The **message contracts** — the typed "language" every other node speaks. This is the
 integration spine of the robot.

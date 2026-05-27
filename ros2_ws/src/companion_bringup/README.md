@@ -1,4 +1,4 @@
-# hexospider_bringup
+# companion_bringup
 
 The **"start everything"** package: launch files and configuration. No robot logic
 lives here — only how to wire nodes together and what parameters to give them.

@@ -1,10 +1,10 @@
-# CLAUDE.md — HexoSpider Project Rules
+# CLAUDE.md — Companion Project Rules
 
 This file is the **authoritative rulebook** for all work in this repository.
 Claude (and any human) MUST follow these rules on every change. When a rule here
 conflicts with a default habit, **this file wins**.
 
-> One-line summary: HexoSpider is an **emotion-aware AI robot companion**. The Pi 5
+> One-line summary: Companion is an **emotion-aware AI robot companion**. The Pi 5
 > is always the brain (ROS 2 + AI + face + empathy); the body is swappable.
 > See `docs/ROADMAP.md` for the vision and `docs/PROGRESS.md` for current status.
 
@@ -35,14 +35,14 @@ conflicts with a default habit, **this file wins**.
   never use it.)
 - **Language:** **Python (`rclpy`)** by default. Use C++ only if a proven
   hard-real-time need appears (document the reason first).
-- **Packages:** named `hexospider_*`. Node/logic packages use `ament_python`;
+- **Packages:** named `companion_*`. Node/logic packages use `ament_python`;
   the interfaces package uses `ament_cmake` (required for message generation).
 - **Messages are contracts.** Nodes communicate over **typed messages**, never by
   reaching into each other's internals. Define/extend messages in
-  `hexospider_interfaces`.
-- **Topics:** namespaced under `/hexospider/...` (e.g. `/hexospider/robot_emotion`).
+  `companion_interfaces`.
+- **Topics:** namespaced under `/companion/...` (e.g. `/companion/robot_emotion`).
 - **No magic numbers.** All tunables are **declared ROS parameters**, with defaults
-  in `hexospider_bringup/config/*.yaml`.
+  in `companion_bringup/config/*.yaml`.
 - **Logging:** use the node logger (`self.get_logger().info(...)`), never `print()`.
 - **QoS:** choose deliberately; keep queue depth **bounded** (small, e.g. 10).
 
@@ -91,7 +91,7 @@ conflicts with a default habit, **this file wins**.
   colcon build
   source install/setup.bash
   colcon test && colcon test-result --verbose
-  ros2 launch hexospider_bringup demo.launch.py
+  ros2 launch companion_bringup demo.launch.py
   ```
 - **Track progress:** after meaningful work, update `docs/PROGRESS.md` (status +
   decision log). This is how we "stay on path."
@@ -107,8 +107,8 @@ conflicts with a default habit, **this file wins**.
 | `docs/ROADMAP.md` | Vision, MOAT, 4-phase plan, exit criteria. |
 | `docs/PROGRESS.md` | Live status + decision log. |
 | `docs/superpowers/specs/` | Per-phase design specs. |
-| `ros2_ws/src/hexospider_interfaces/` | Message contracts. |
-| `ros2_ws/src/hexospider_bringup/` | Launch files + config. |
-| `ros2_ws/src/hexospider_brain/` | Personality/empathy (stub in Phase 1). |
-| `ros2_ws/src/hexospider_face/` | Face renderer (stub in Phase 1). |
+| `ros2_ws/src/companion_interfaces/` | Message contracts. |
+| `ros2_ws/src/companion_bringup/` | Launch files + config. |
+| `ros2_ws/src/companion_brain/` | Personality/empathy (stub in Phase 1). |
+| `ros2_ws/src/companion_face/` | Face renderer (stub in Phase 1). |
 | `tools/check_file_length.py` | The 800-line guard. |

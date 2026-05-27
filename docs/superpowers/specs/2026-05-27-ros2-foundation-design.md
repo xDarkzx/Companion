@@ -1,11 +1,11 @@
-# Spec — Phase 1: HexoSpider ROS 2 Foundation
+# Spec — Phase 1: Companion ROS 2 Foundation
 
 _Date: 2026-05-27 · Status: approved · Phase: 1 of 4_
 
 ## 1. Overview
 
 Build a clean, modular **ROS 2 Jazzy** workspace that serves as the backbone for the
-entire HexoSpider robot. Every subsystem will be a **node** communicating over
+entire Companion robot. Every subsystem will be a **node** communicating over
 **typed message contracts**. Phase 1 delivers the skeleton, two stub nodes that prove
 the pipeline end-to-end, and automated quality guardrails. **No hardware is required**
 — it runs in WSL2 today and identically on the Pi.
@@ -31,7 +31,7 @@ no Docker. Those belong to later phases (see `docs/ROADMAP.md`).
   │ senses HUMAN emotion│──────▶│ decides ROBOT emotion│──────▶│ renders face (logs) │
   │  HumanEmotion msg   │  topic │  + empathy (later)   │ topic  │  RobotEmotion msg   │
   └────────────────────┘        └────────────────────┘        └────────────────────┘
-        /hexospider/human_emotion          /hexospider/robot_emotion
+        /companion/human_emotion          /companion/robot_emotion
         (contract defined now, used Phase 3)   (exercised by the Phase 1 demo)
 ```
 
@@ -41,7 +41,7 @@ each node testable in isolation.
 ## 5. Repository layout
 
 ```
-HexoSpider/
+Companion/
 ├─ CLAUDE.md                         # rules
 ├─ README.md
 ├─ .gitignore
@@ -52,13 +52,13 @@ HexoSpider/
 ├─ tools/
 │  └─ check_file_length.py           # 800-line guard
 └─ ros2_ws/src/
-   ├─ hexospider_interfaces/         # ament_cmake (message generation)
-   ├─ hexospider_bringup/            # launch + config (ament_python)
-   ├─ hexospider_brain/              # stub heartbeat node (ament_python)
-   └─ hexospider_face/               # stub logger node (ament_python)
+   ├─ companion_interfaces/         # ament_cmake (message generation)
+   ├─ companion_bringup/            # launch + config (ament_python)
+   ├─ companion_brain/              # stub heartbeat node (ament_python)
+   └─ companion_face/               # stub logger node (ament_python)
 ```
 
-> The `hexospider_interfaces` package must use **`ament_cmake`** because ROS message
+> The `companion_interfaces` package must use **`ament_cmake`** because ROS message
 > (`rosidl`) generation requires it. The node packages use **`ament_python`**. This is
 > the standard ROS 2 mixed-package pattern.
 
@@ -93,24 +93,24 @@ Two separate messages (not one) keep producers and consumers clean: Perception �
 
 ## 7. Nodes (Phase 1 stubs)
 
-- **`hexospider_brain/heartbeat_node.py`** — on a timer (rate from config),
-  publishes `RobotEmotion` on `/hexospider/robot_emotion`, cycling through a small set
+- **`companion_brain/heartbeat_node.py`** — on a timer (rate from config),
+  publishes `RobotEmotion` on `/companion/robot_emotion`, cycling through a small set
   of emotions. The emotion-selection logic is a **pure function** so it can be unit
   tested without ROS. Declares parameters; logs via the node logger; shuts down cleanly.
-- **`hexospider_face/face_stub_node.py`** — subscribes to
-  `/hexospider/robot_emotion` and logs `Showing emotion: <name> (<intensity>)`. In
+- **`companion_face/face_stub_node.py`** — subscribes to
+  `/companion/robot_emotion` and logs `Showing emotion: <name> (<intensity>)`. In
   Phase 2 the *insides* of this file become the real LCD renderer; its topic
   interface does not change.
 
 ## 8. Configuration
 
-`hexospider_bringup/config/demo.yaml` holds tunables (e.g. `publish_rate_hz`,
+`companion_bringup/config/demo.yaml` holds tunables (e.g. `publish_rate_hz`,
 `emotion_sequence`). Nodes use `declare_parameter` with sensible defaults. **No magic
 numbers in code.**
 
 ## 9. Launch
 
-`hexospider_bringup/launch/demo.launch.py` (Python launch file) starts the Brain and
+`companion_bringup/launch/demo.launch.py` (Python launch file) starts the Brain and
 Face nodes with the config applied.
 
 ## 10. Quality guardrails
@@ -141,7 +141,7 @@ Face nodes with the config applied.
 1. `colcon build` completes cleanly in WSL2.
 2. `colcon test` passes: linters clean, 800-line guard passes, unit + integration
    tests green.
-3. `ros2 launch hexospider_bringup demo.launch.py` shows the Brain publishing
+3. `ros2 launch companion_bringup demo.launch.py` shows the Brain publishing
    emotions and the Face logging them, live.
 4. Repository initialized in git with a sane `.gitignore`.
 

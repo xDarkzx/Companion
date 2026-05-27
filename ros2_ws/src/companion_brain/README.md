@@ -1,4 +1,4 @@
-# hexospider_brain
+# companion_brain
 
 The **decision-maker**: chooses what the robot should feel and (later) reasons with
 empathy about the human. Publishes `RobotEmotion`.

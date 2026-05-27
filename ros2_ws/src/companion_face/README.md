@@ -1,4 +1,4 @@
-# hexospider_face
+# companion_face
 
 The **face**: turns the robot's emotion into something you can see. Subscribes to
 `RobotEmotion`.
