@@ -22,3 +22,6 @@ Thumbs.db
 
 # Misc
 *.log
+
+# Third-party reference material (study-only, e.g. CC BY-NC) — never shipped/committed
+reference/
