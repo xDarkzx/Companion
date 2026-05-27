@@ -5,6 +5,7 @@ Controls:  [<-/->] change expression   [1-9] pick   [C] eye colour
 """
 from __future__ import annotations
 
+import math
 import random
 import sys
 import time
@@ -34,9 +35,9 @@ def main():
     clock = pygame.time.Clock()
 
     order, palettes = expressions.ORDER, expressions.PALETTES
-    expr_i, color_i, dots, auto = 0, 0, True, False
+    expr_i, color_i, dots, auto = 0, 0, True, True
     t0 = time.time()
-    next_blink, blink_until, auto_next = t0 + 3, 0.0, t0 + 2.0
+    next_blink, blink_until, auto_next = t0 + 3, 0.0, t0 + 5.0
 
     running = True
     while running:
@@ -67,14 +68,15 @@ def main():
 
         if auto and now >= auto_next:
             expr_i = (expr_i + 1) % len(order)
-            auto_next = now + 2.0
+            auto_next = now + 5.0
         if now >= next_blink and now > blink_until:
             blink_until = now + 0.14
             next_blink = now + random.uniform(2.5, 5.5)
         blink = max(0.0, 1 - abs((blink_until - now) / 0.14 * 2 - 1)) if now < blink_until else 0.0
 
         color = palettes[color_i][1]
-        face.draw_face(canvas, order[expr_i], t, color, blink, dots)
+        gaze = (int(36 * math.sin(t * 0.8)), int(22 * math.sin(t * 0.55 + 1.0)))
+        face.draw_face(canvas, order[expr_i], t, color, blink, dots, gaze)
         screen.fill((18, 18, 22))
         screen.blit(pygame.transform.scale(canvas, (face.CANVAS[0] * SCALE, face.CANVAS[1] * SCALE)), (0, 0))
         hud = f'{order[expr_i]}   colour:{palettes[color_i][0]}   dots:{"on" if dots else "off"}   auto:{"on" if auto else "off"}'

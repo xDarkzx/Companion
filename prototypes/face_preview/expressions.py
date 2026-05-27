@@ -20,11 +20,11 @@ PALETTES = [
 #   lid  : 0..1 fraction of the eye covered (sleepy)
 # Geometry is in the logical 480x320 canvas.
 CONFIG = {
-    'neutral':  dict(shape='rounded', w=104, h=140, r=44, tilt=0, cy=160),
-    'happy':    dict(shape='crescent_up', w=128, thick=46, tilt=0, cy=152),
-    'sad':      dict(shape='rounded', w=100, h=116, r=42, tilt=18, cy=176, extras=('teardrop',)),
-    'angry':    dict(shape='rounded', w=112, h=108, r=24, tilt=-22, cy=158, extras=('vein',)),
-    'cry':      dict(shape='rounded', w=100, h=120, r=42, tilt=18, cy=172, extras=('tears',)),
+    'neutral':  dict(shape='rounded', w=104, h=140, r=44, tilt=0, cy=150),
+    'happy':    dict(shape='crescent_up', w=128, thick=46, tilt=0, cy=140, mouth='smile'),
+    'sad':      dict(shape='rounded', w=100, h=116, r=42, tilt=18, cy=160, mouth='frown', extras=('teardrop',)),
+    'angry':    dict(shape='rounded', w=112, h=108, r=24, tilt=-22, cy=150, extras=('vein',)),
+    'cry':      dict(shape='rounded', w=100, h=120, r=42, tilt=18, cy=158, mouth='frown', extras=('tears',)),
     'love':     dict(shape='heart', w=120, tilt=0, cy=156, extras=('hearts',)),
     'surprise': dict(shape='rounded', w=132, h=150, r=62, tilt=0, cy=156, extras=('excl',)),
     'sleepy':   dict(shape='rounded', w=110, h=140, r=46, tilt=0, cy=170, lid=0.6, extras=('zzz',)),

@@ -31,12 +31,14 @@ def _eye_surface(cfg, color):
     return shapes.rounded_eye(cfg['w'], height, cfg['r'], color)
 
 
-def draw_face(surface, expression, t=0.0, color=(90, 220, 255), blink=0.0, dotmatrix=False):
+def draw_face(surface, expression, t=0.0, color=(90, 220, 255), blink=0.0,
+              dotmatrix=False, gaze=(0, 0)):
     """Render the face for `expression` at time `t` onto `surface`."""
     surface.fill(BG)
     cfg = expressions.CONFIG.get(expression, expressions.CONFIG['neutral'])
     bob = int(3 * math.sin(t * 2.0))
     tilt = cfg.get('tilt', 0)
+    gx, gy = gaze
 
     for side in ('left', 'right'):
         eye = _eye_surface(cfg, color)
@@ -50,9 +52,15 @@ def draw_face(surface, expression, t=0.0, color=(90, 220, 255), blink=0.0, dotma
             eye = pygame.transform.rotozoom(eye, angle, 1.0)
         ew, eh = eye.get_size()
         sign = -1 if side == 'left' else 1
-        cx = EYE_CX + sign * (EYE_GAP // 2 + cfg['w'] // 2)
-        cy = cfg.get('cy', 160) + bob
+        cx = EYE_CX + sign * (EYE_GAP // 2 + cfg['w'] // 2) + gx
+        cy = cfg.get('cy', 160) + bob + gy
         surface.blit(eye, (cx - ew // 2, cy - eh // 2))
+
+    mouth_kind = cfg.get('mouth')
+    if mouth_kind:
+        m = shapes.mouth(150, color, mouth_kind)
+        mw, mh = m.get_size()
+        surface.blit(m, (EYE_CX + gx // 2 - mw // 2, 252 + bob + gy // 2 - mh // 2))
 
     expressions.draw_extras(surface, cfg.get('extras', ()), t, color)
     if dotmatrix:
