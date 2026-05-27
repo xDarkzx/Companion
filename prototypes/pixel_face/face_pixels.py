@@ -164,10 +164,14 @@ def _place(cells, width, height, center, mirror=False):
 
 
 def _blit_cells(surface, cells, color):
-    """Draw each lit grid cell as a flat, contiguous square pixel (LCD-style)."""
+    """Draw each lit grid cell as a SEPARATE pixel (gap at every intersection)."""
     for c, r in cells:
         if 0 <= c < GRID_W and 0 <= r < GRID_H:
-            pygame.draw.rect(surface, color, (c * CELL, r * CELL, CELL, CELL))
+            pygame.draw.rect(
+                surface, color,
+                (c * CELL + GAP // 2, r * CELL + GAP // 2, CELL - GAP, CELL - GAP),
+                border_radius=3,
+            )
 
 
 def _blur(surf, factor=0.22):
