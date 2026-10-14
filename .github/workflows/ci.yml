@@ -35,6 +35,21 @@ jobs:
           path: ros2_ws/build/*/test_results/
           if-no-files-found: ignore
 
+  vision:
+    name: Vision library (Python 3.12, CPU, no model downloads)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install the library and test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ros2_ws/src/companion_vision pytest
+      - name: Unit tests
+        run: python -m pytest ros2_ws/src/companion_vision/test -q --ignore-glob='*flake8*' --ignore-glob='*pep257*'
+
   security:
     name: Secret scan
     runs-on: ubuntu-24.04
