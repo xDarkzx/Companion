@@ -2,13 +2,13 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import tempfile
-from pathlib import Path
 
 from companion_voice.robot_tts_fx import apply_fx
-from companion_voice.robot_tts_profiles import RobotTtsProfile, get_profile
+from companion_voice.robot_tts_profiles import get_profile, RobotTtsProfile
 from companion_voice.tts_paths import discover_piper_binary
 
 

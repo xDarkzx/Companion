@@ -1,8 +1,8 @@
 """Canonical robot replies — every spoken line the agent uses maps to one phrase clip."""
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
+import re
 
 
 @dataclass(frozen=True)

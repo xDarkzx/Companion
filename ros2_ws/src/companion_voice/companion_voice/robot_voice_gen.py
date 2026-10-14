@@ -1,8 +1,8 @@
 """Generate cute English robot speech (profile-based TTS + optional sox)."""
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
+import tempfile
 
 from companion_voice.robot_tts_profiles import default_profile_key
 from companion_voice.robot_tts_synth import synthesize_profile_wav

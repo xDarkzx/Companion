@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 import shutil
 import subprocess
-from pathlib import Path
 
 DEFAULT_PULSE_SERVER = 'unix:/mnt/wslg/PulseServer'
 
@@ -29,7 +29,7 @@ def pulse_env() -> dict[str, str]:
 
 
 def pulse_capture_available() -> bool:
-    """True when parecord can read from WSLg RDPSource."""
+    """Report whether parecord can read from the WSLg RDPSource."""
     if not shutil.which('parecord'):
         return False
     if not pulse_server():

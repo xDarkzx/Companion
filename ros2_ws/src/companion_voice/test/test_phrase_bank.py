@@ -3,8 +3,8 @@ from pathlib import Path
 
 from companion_voice.phrase_bank import (
     match_phrase_key,
-    pick_boot_greeting_key,
     phrases_ready,
+    pick_boot_greeting_key,
     text_slug,
 )
 

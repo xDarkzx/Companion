@@ -1,9 +1,9 @@
 """Sox post-processing presets to make neural TTS sound like a desk-pet robot."""
 from __future__ import annotations
 
+from pathlib import Path
 import shutil
 import subprocess
-from pathlib import Path
 
 # sox effect chains applied after TTS render.
 FX_CHAINS: dict[str, list[str]] = {

@@ -11,7 +11,6 @@ VOICE_SRC = ROOT / 'ros2_ws' / 'src' / 'companion_voice'
 if str(VOICE_SRC) not in sys.path:
     sys.path.insert(0, str(VOICE_SRC))
 
-from companion_voice.phrase_bank import ROBOT_PHRASES  # noqa: E402
 from companion_voice.reply_catalog import catalog_phrase_dict, extra_place_phrases  # noqa: E402
 from companion_voice.robot_tts_profiles import (  # noqa: E402
     ROBOT_TTS_PROFILES,

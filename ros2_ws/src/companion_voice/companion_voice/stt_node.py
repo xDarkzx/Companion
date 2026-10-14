@@ -49,7 +49,7 @@ class SttNode(Node):
         self._tts_playing = bool(msg.data)
 
     def _mic_should_pause(self) -> bool:
-        """True when TTS playback is active."""
+        """Report whether TTS playback is active."""
         return self._tts_playing
 
     def publish_text(self, text: str) -> None:

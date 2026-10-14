@@ -1,14 +1,14 @@
 """Map agent replies to pre-recorded English robot phrase clips."""
 from __future__ import annotations
 
-import re
 from pathlib import Path
+import re
 
 from companion_voice.reply_catalog import (
     BOOT_GREETING_KEYS,
+    catalog_phrase_dict,
     EMOTION_PHRASE_KEY,
     TEXT_RULES,
-    catalog_phrase_dict,
     text_slug,
 )
 
@@ -59,7 +59,7 @@ def clip_path(assets_dir: Path, key: str) -> Path | None:
 
 
 def phrases_ready(assets_dir: Path, minimum: int = 5) -> bool:
-    """True when enough phrase clips exist to use phrase mode."""
+    """Report whether enough phrase clips exist to use phrase mode."""
     if not assets_dir.is_dir():
         return False
     count = sum(1 for key in ROBOT_PHRASES if clip_path(assets_dir, key) is not None)

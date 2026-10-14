@@ -117,7 +117,7 @@ def resolve_input_device_index(spec: str) -> int | None:
 
 
 def use_pulse_capture() -> bool:
-    """True when mic input should use parecord (WSLg) instead of sounddevice."""
+    """Report whether mic input should use parecord (WSLg) instead of sounddevice."""
     from companion_voice.wslg_audio import pulse_capture_available
 
     try:
