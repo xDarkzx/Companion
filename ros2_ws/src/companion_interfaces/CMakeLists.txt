@@ -12,6 +12,10 @@ find_package(std_msgs REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotEmotion.msg"
   "msg/HumanEmotion.msg"
+  "msg/BehaviorRequest.msg"
+  "msg/AgentState.msg"
+  "msg/Detection.msg"
+  "msg/DetectionBatch.msg"
   DEPENDENCIES std_msgs
 )
 
