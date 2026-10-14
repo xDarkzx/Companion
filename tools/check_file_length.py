@@ -12,7 +12,7 @@ from pathlib import Path
 
 DEFAULT_LIMIT = 800
 SOURCE_SUFFIXES = {".py", ".cpp", ".hpp", ".cc", ".c", ".h"}
-SKIP_DIRS = {"build", "install", "log", "__pycache__", ".git", ".pytest_cache"}
+SKIP_DIRS = {"build", "install", "log", "__pycache__", ".git", ".pytest_cache", "vendor"}
 
 
 def iter_source_files(root: Path) -> list[Path]:

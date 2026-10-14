@@ -1,0 +1,18 @@
+[project]
+name = "companion"
+version = "0.1.0"
+description = "Emotion-aware AI robot companion (MentorPi Pi 5 stack)"
+requires-python = ">=3.10"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["ros2_ws/src/companion_agent", "ros2_ws/src/companion_behaviors",
+       "ros2_ws/src/companion_body", "ros2_ws/src/companion_brain",
+       "ros2_ws/src/companion_bringup", "ros2_ws/src/companion_face",
+       "ros2_ws/src/companion_memory", "ros2_ws/src/companion_perception",
+       "ros2_ws/src/companion_voice", "tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]

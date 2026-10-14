@@ -48,3 +48,10 @@ def test_main_returns_zero_when_clean(tmp_path):
 def test_main_returns_one_on_violation(tmp_path):
     (tmp_path / "bad.py").write_text("x\n" * 10, encoding="utf-8")
     assert main([str(tmp_path), "--limit", "5"]) == 1
+
+
+def test_skips_vendor_dir(tmp_path):
+    vendor = tmp_path / "vendor"
+    vendor.mkdir()
+    (vendor / "huge.py").write_text("x\n" * 100, encoding="utf-8")
+    assert find_violations(tmp_path, limit=5) == []
