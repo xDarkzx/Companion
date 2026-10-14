@@ -1,8 +1,7 @@
 """Authoritative Companion architecture contracts (ground truth for CI).
 
-Human-readable mirror: docs/ARCHITECTURE_CONTRACTS.md
-Derived from: CLAUDE.md, docs/ENTERPRISE_STACK.md, docs/HUMAN_INTERFACE.md,
-docs/TESTING.md, and companion_interfaces/*.msg
+The package graph in docs/ARCHITECTURE.md is generated from this file
+(tools/gen_architecture_diagram.py), and CI fails if the two disagree.
 """
 from __future__ import annotations
 
@@ -16,7 +15,7 @@ MAX_QOS_DEPTH = 10
 # --- ROS distro (CLAUDE.md) ---
 REQUIRED_ROS_DISTRO = 'jazzy'
 
-# --- Shipped places.yaml (docs/HUMAN_INTERFACE.md) ---
+# --- Shipped places.yaml (companion_bringup/config/places.yaml) ---
 # Kept in sync with companion_memory/places_contract.py (CI enforced).
 REFERENCE_PLACES: dict[str, dict[str, float]] = {
     'kitchen': {'x': 3.2, 'y': 1.1, 'yaw': 1.57},
@@ -92,7 +91,7 @@ class TopicContract:
     subscribers: frozenset[str]
 
 
-# Topic graph — must match docs/ARCHITECTURE_CONTRACTS.md
+# Topic graph — rendered into docs/ARCHITECTURE.md
 TOPIC_CONTRACTS: dict[str, TopicContract] = {
     '/companion/robot_emotion': TopicContract(
         msg_type='RobotEmotion',
@@ -188,7 +187,7 @@ class ServiceContract:
     clients: frozenset[str]
 
 
-# Service graph — must match docs/ARCHITECTURE_CONTRACTS.md
+# Service graph — rendered into docs/ARCHITECTURE.md
 SERVICE_CONTRACTS: dict[str, ServiceContract] = {
     '/companion/find_object': ServiceContract(
         srv_type='FindObject',

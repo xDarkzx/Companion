@@ -1,109 +1,75 @@
-# Setup — ROS 2 Jazzy for Companion
+# Setup
 
-Two environments, **same code**:
+There are three ways in, depending on what you want to do.
 
-- **WSL2 (Ubuntu 24.04) on your Windows PC** — daily development + automated tests.
-- **Raspberry Pi 5 (Ubuntu Server 24.04)** — hardware testing + deployment.
+| Goal | Needs | Time |
+|---|---|---|
+| Run every test exactly as CI does | Docker | One command, about 5 minutes the first time |
+| Develop the ROS stack | Ubuntu 24.04 (native, WSL2 or a Pi 5) with ROS 2 Jazzy | About 30 minutes |
+| Run the vision models, benchmarks or webcam demo | Python 3.10+ and a CUDA GPU (a CPU works, slowly) | About 10 minutes plus model downloads |
 
-The ROS 2 install steps are **identical** on both. Commands below are verified against
-the official ROS 2 Jazzy docs:
-<https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html>
-
----
-
-## Part A — Install WSL2 (Windows only, one time)
-
-In **Windows PowerShell (as Administrator)**:
-
-```powershell
-wsl --install -d Ubuntu-24.04
-```
-
-Reboot if prompted, then launch **Ubuntu 24.04** from the Start menu and create your
-Linux username/password. You now have an Ubuntu terminal — use it for everything below.
-
-## Part B — Flash the Pi (Pi only, one time)
-
-1. Install **Raspberry Pi Imager** on Windows.
-2. Choose OS → **Other general-purpose OS → Ubuntu → Ubuntu Server 24.04 LTS (64-bit)**.
-3. Set hostname, enable SSH, set username/Wi-Fi in the Imager settings, write the card.
-4. Boot the Pi, then SSH in from Windows: `ssh <user>@<pi-hostname>.local`.
-
----
-
-## Part C — Install ROS 2 Jazzy (both WSL2 and Pi, identical)
+## 1. Run the full gate in Docker
 
 ```bash
-# 1. Locale (UTF-8)
-sudo apt update && sudo apt install -y locales
-sudo locale-gen en_US en_US.UTF-8
-sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
-export LANG=en_US.UTF-8
-
-# 2. Enable the universe repository
-sudo apt install -y software-properties-common
-sudo add-apt-repository universe
-
-# 3. Add the ROS 2 apt source (official method)
-sudo apt update && sudo apt install -y curl
-export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F'"' '{print $4}')
-curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
-sudo dpkg -i /tmp/ros2-apt-source.deb
-
-# 4. Install ROS 2 base + dev tools
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y ros-jazzy-ros-base ros-dev-tools
-
-# 5. Source ROS in every new shell (add to ~/.bashrc so it is automatic)
-echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
-source ~/.bashrc
+bash scripts/docker_verify.sh
 ```
 
----
+This builds `docker/ci.Dockerfile` (ROS 2 Jazzy plus every dependency the packages declare),
+copies the repository into the container read-only, and runs `scripts/verify_all.sh`:
 
-## Part D — Get the code + build + test + run
+- the line guard;
+- ruff;
+- the architecture and test-honesty validators;
+- `colcon build`;
+- `colcon test` (lint, unit and launch tests).
+
+It ends with `DONE_OK` when everything passes.
+
+## 2. Develop the ROS stack (Ubuntu 24.04)
+
+On Windows, install Ubuntu first with `wsl --install -d Ubuntu-24.04`. On a Pi 5, flash
+Ubuntu Server 24.04 (64-bit) with Raspberry Pi Imager. Then install ROS 2 Jazzy following the
+[official guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
+(`ros-jazzy-ros-base` and `ros-dev-tools`), and build:
 
 ```bash
-# Clone into the Linux filesystem (faster than /mnt/d). Use your repo URL/path.
-git clone <your-repo-url> companion && cd companion/ros2_ws
-
-# Resolve package dependencies declared in the package.xml files
-sudo rosdep init   # first time only; ignore "already exists" errors
-rosdep update
+cd ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
-
-# Build
 colcon build
-
-# Source this workspace's overlay (every new shell, after sourcing ROS itself)
 source install/setup.bash
-
-# Run the test suite (lint + unit + integration)
 colcon test && colcon test-result --verbose
-
-# Run the Phase 1 demo
-ros2 launch companion_bringup demo.launch.py
 ```
 
-**Expected demo output** — the brain publishing and the face logging, ~1/second:
-
-```
-[heartbeat_node]: Published emotion: neutral (0.8)
-[face_stub_node]: Showing emotion: neutral (0.80) from brain
-[heartbeat_node]: Published emotion: happy (0.8)
-[face_stub_node]: Showing emotion: happy (0.80) from brain
-...
-```
-
-Press `Ctrl+C` to stop. Inspect the topic live with:
-`ros2 topic echo /companion/robot_emotion`.
-
----
-
-## The 800-line guard (any OS, including Windows)
+Run something:
 
 ```bash
-python tools/check_file_length.py .
+ros2 launch companion_bringup desktop_dev.launch.py     # face window + keyboard commands + memory
+bash scripts/desktop_demo.sh keyboard true              # the same, with a USB camera and perception
+ros2 topic pub --once /companion/voice_command std_msgs/String "{data: 'where is the mug'}"
 ```
 
-Exits non-zero and lists offenders if any source file exceeds 800 lines.
+`desktop_dev.launch.py` opens the face in a window (WSLg on Windows) and reads commands typed
+at the `Companion>` prompt. With `voice_mode:=whisper` it listens to the default microphone
+instead.
+
+## 3. Vision models, benchmarks and the webcam demo
+
+```bash
+python -m venv .venv-vision && . .venv-vision/bin/activate     # Windows: .venv-vision\Scripts\activate
+pip install torch --index-url https://download.pytorch.org/whl/cu128   # or /cpu
+pip install -e "ros2_ws/src/companion_vision[models,demo]" pytest pycocotools h5py scipy
+export HF_HOME=/path/with/space/hf-cache                           # models are a few GB
+
+COMPANION_MODEL_TESTS=1 pytest ros2_ws/src/companion_vision/test   # real-model smoke tests
+python -m companion_vision.demo --query mug --query "water bottle"
+```
+
+Benchmarks are described in [EVALUATION.md](EVALUATION.md).
+
+## Tooling
+
+- **pre-commit:** `pip install pre-commit && pre-commit install` runs ruff, the line guard, a
+  secret scan and commit-message checks on every commit.
+- **ruff:** pinned in `requirements-dev.txt`, so local and CI results match.
+- **Regenerated documents:** `python tools/gen_architecture_diagram.py` and
+  `python eval/report.py` rebuild the generated parts of the docs. CI checks both are current.

@@ -30,6 +30,9 @@ python3 tools/check_file_length.py tools
 echo ">>> ruff (pinned in requirements-dev.txt)"
 ruff check ros2_ws/src/companion_* tools
 
+echo ">>> generated docs are current"
+python3 tools/gen_architecture_diagram.py --check
+
 echo ">>> tools pytest (architecture + test honesty gates)"
 python3 -m pytest tools -q
 
