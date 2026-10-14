@@ -154,7 +154,8 @@ class TestCompanionPipeline(unittest.TestCase):
             self.node,
             lambda: (
                 len(self.behaviors) >= 2
-                and ('arrived' in self.nav_status or len(self.goals) >= 1)
+                and len(self.goals) >= 1
+                and 'arrived' in self.nav_status
             ),
             timeout_sec=18.0,
         )
