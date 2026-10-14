@@ -51,6 +51,10 @@ jobs:
           python -m pip install -e ros2_ws/src/companion_vision pytest
       - name: Unit tests
         run: python -m pytest ros2_ws/src/companion_vision/test -q --ignore-glob='*flake8*' --ignore-glob='*pep257*'
+      - name: Evaluation harness tests
+        run: python -m pytest eval -q
+      - name: docs/EVALUATION.md matches eval/results
+        run: python eval/report.py --check
 
   security:
     name: Secret scan
