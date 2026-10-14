@@ -1,0 +1,11 @@
+# Face node parameters (ASCII grid, 480x320).
+face_ascii_node:
+  ros__parameters:
+    display_scale: 1
+    enable_sfx: true
+    blink_min_s: 2.0
+    blink_max_s: 5.5
+
+voice_demo_node:
+  ros__parameters:
+    interval_s: 3.0

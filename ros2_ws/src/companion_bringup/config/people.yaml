@@ -1,0 +1,9 @@
+# People Companion can greet by name (Phase 3: face/voice IDs).
+
+people:
+  dan:
+    note: "Primary owner"
+  # Example after face enrollment:
+  # alex:
+  #   face_id: "embedding-uuid-here"
+  #   note: "Friend"

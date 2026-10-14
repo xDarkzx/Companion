@@ -1,0 +1,55 @@
+# PC / WSL desktop dev — face + voice + memory, no camera required.
+# Launch: ros2 launch companion_bringup desktop_dev.launch.py
+
+agent_node:
+  ros__parameters:
+    speak_replies: true
+    wait_for_nav: true
+    step_delay_sec: 1.0
+    react_to_vision: false
+    session_max_turns: 20
+    max_stored_facts: 500
+    llm_provider: ollama          # none | ollama — natural replies when Ollama runs
+    ollama_model: llama3.2
+    ollama_base_url: http://127.0.0.1:11434
+    welcome_message: random          # random = cached boot clip | or exact phrase
+
+stt_node:
+  ros__parameters:
+    mode: whisper
+    input_device: ""              # empty = default; set index if silent (see mic test)
+    whisper_model: base.en
+    chunk_sec: 3.0
+    min_audio_rms: 0.008          # raise to 0.02 if fan noise triggers false STT
+    use_vad: true
+    post_speak_delay_sec: 0.3     # echo guard after TTS (AIChatCompanion pattern)
+    min_transcript_words: 2       # skip noise / one-word false positives
+    keyboard_prompt: "Companion> "
+
+tts_node:
+  ros__parameters:
+    mode: auto               # auto | phrases | piper | espeak | log
+    output_device: ""
+    phrase_assets_dir: ""    # auto: assets/phrases (run fetch_robot_phrases.sh)
+
+nav_bridge_node:
+  ros__parameters:
+    simulated_travel_sec: 2.0
+    use_nav_action: false
+    map_frame: map
+
+behavior_controller_node:
+  ros__parameters:
+    patrol_emotions:
+      - neutral
+      - surprise
+      - happy
+      - neutral
+    patrol_animation_sec: 2.5
+
+face_ascii_node:
+  ros__parameters:
+    display_scale: 2
+    enable_sfx: true
+    blink_min_s: 2.0
+    blink_max_s: 5.5

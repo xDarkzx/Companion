@@ -1,0 +1,51 @@
+# Companion stack parameters (agent + behaviors + nav bridge).
+
+agent_node:
+  ros__parameters:
+    default_intensity: 0.85
+    places_file: ""
+    people_file: ""
+    step_delay_sec: 4.0
+    llm_provider: none   # none | ollama | openai
+    speak_replies: true
+    wait_for_nav: true
+    session_max_turns: 20
+    react_to_vision: false
+    vision_hint_cooldown_sec: 8.0
+    fact_db_path: ""          # set on Pi e.g. /var/lib/companion/facts.db
+    max_stored_facts: 500
+
+behavior_controller_node:
+  ros__parameters:
+    patrol_emotions:
+      - neutral
+      - surprise
+      - happy
+      - neutral
+    patrol_animation_sec: 2.5
+
+body_status_node:
+  ros__parameters:
+    publish_rate_hz: 1.0
+
+nav_bridge_node:
+  ros__parameters:
+    places_file: ""   # overridden in launch file
+    map_frame: map
+    simulated_travel_sec: 4.0   # dev: fake arrival; set 0 on Pi with real Nav2
+    use_nav_action: false
+    nav_action_name: navigate_to_pose
+    follow_standoff_m: 1.5
+    follow_min_confidence: 0.4
+    follow_anchor_place: ""
+    follow_rate_hz: 2.0
+    patrol_places:
+      - kitchen
+      - bedroom
+      - dock
+
+camera_watch_node:
+  ros__parameters:
+    rgb_topic: /ascamera/camera_publisher/rgb0/image
+    depth_topic: /ascamera/camera_publisher/depth0/image_raw
+    status_rate_hz: 1.0

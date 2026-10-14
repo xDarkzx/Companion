@@ -1,0 +1,19 @@
+# Voice hardware + STT/TTS settings (WonderEcho Pro, ReSpeaker, etc.)
+
+stt_node:
+  ros__parameters:
+    mode: keyboard          # keyboard | whisper | off
+    input_device: ""        # ALSA device e.g. plughw:1,0 — empty = system default
+    whisper_model: base.en  # tiny.en | base.en | small.en
+    chunk_sec: 3.0
+    keyboard_prompt: "Companion> "
+
+tts_node:
+  ros__parameters:
+    mode: log              # piper | espeak | log
+    output_device: ""       # ALSA playback device — empty = default
+    piper_model: ""
+
+# Recommended hardware (see docs/VOICE_HARDWARE.md):
+#   WonderEcho Pro — Hiwonder USB mic+speaker (MentorPi kit)
+#   ReSpeaker XVF3800 USB — 4-mic array + external speaker

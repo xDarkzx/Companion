@@ -9,6 +9,7 @@ import launch_testing.actions
 import pytest
 import rclpy
 from rclpy.node import Node
+from ros_test_helpers import warm_up_dds
 
 
 @pytest.mark.launch_test
@@ -60,12 +61,18 @@ class TestEmotionFlows(unittest.TestCase):
         self.node.destroy_node()
 
     def test_robot_emotion_is_published(self):
-        """Assert a known RobotEmotion arrives within 10 seconds."""
+        """Assert heartbeat publishes valid RobotEmotion with required fields."""
+        warm_up_dds(self.node, seconds=2.0)
         deadline = time.time() + 10.0
         while time.time() < deadline and not self.received:
             rclpy.spin_once(self.node, timeout_sec=0.5)
         self.assertGreater(
             len(self.received), 0, 'No RobotEmotion received within 10s'
         )
+        msg = self.received[0]
+        self.assertEqual(msg.source, 'brain')
+        self.assertGreaterEqual(msg.intensity, 0.0)
+        self.assertLessEqual(msg.intensity, 1.0)
+        self.assertGreater(msg.header.stamp.sec + msg.header.stamp.nanosec, 0)
         expected = {'neutral', 'happy', 'sad', 'angry', 'love'}
-        self.assertIn(self.received[0].emotion, expected)
+        self.assertIn(msg.emotion, expected)

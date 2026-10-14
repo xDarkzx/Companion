@@ -1,0 +1,9 @@
+# Home patrol waypoints for Nav2 FollowWaypoints (map frame).
+# Fill in after first SLAM mapping session on the Pi.
+#
+# Example entry (replace x/y/yaw with your map):
+#   - x: 1.0
+#     y: 0.5
+#     yaw: 0.0
+
+waypoints: []

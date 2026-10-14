@@ -1,0 +1,27 @@
+# USB webcam + detector overrides for desktop_dev (enable_vision:=true)
+
+detector_node:
+  ros__parameters:
+    rgb_topic: /image_raw
+    use_camera: true
+    model_path: ""
+    publish_rate_hz: 2.0
+    frame_width: 640
+    frame_height: 480
+    source_label: desktop_usb
+
+camera_watch_node:
+  ros__parameters:
+    rgb_topic: /image_raw
+    depth_topic: /companion/unused_depth
+    status_rate_hz: 1.0
+
+agent_node:
+  ros__parameters:
+    react_to_vision: true
+    vision_hint_cooldown_sec: 12.0
+
+vision_preview_node:
+  ros__parameters:
+    rgb_topic: /image_raw
+    display_scale: 1
