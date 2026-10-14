@@ -10,8 +10,10 @@ another node that plugs into the same backbone.
 
 ## Status
 
-**Phase 1 — ROS 2 Foundation.** See [`docs/PROGRESS.md`](docs/PROGRESS.md) for live
+**Phase 2 — Emotional Face + human interface.** See [`docs/PROGRESS.md`](docs/PROGRESS.md) for live
 status and [`docs/ROADMAP.md`](docs/ROADMAP.md) for the full plan.
+
+**Key docs:** [`DESKTOP_DEV.md`](docs/DESKTOP_DEV.md) · [`MENTORPI_DELUXE.md`](docs/MENTORPI_DELUXE.md) · [`HUMAN_INTERFACE.md`](docs/HUMAN_INTERFACE.md) · [`VOICE_HARDWARE.md`](docs/VOICE_HARDWARE.md) · [`ENTERPRISE_STACK.md`](docs/ENTERPRISE_STACK.md)
 
 ## Tech stack
 
@@ -27,9 +29,16 @@ Companion/
 ├─ docs/                     ← roadmap, progress, design specs
 ├─ ros2_ws/src/              ← ROS 2 packages
 │  ├─ companion_interfaces/ ← message contracts
-│  ├─ companion_bringup/    ← launch files + config
-│  ├─ companion_brain/      ← personality/empathy (stub in Phase 1)
-│  └─ companion_face/       ← face renderer (stub in Phase 1)
+│  ├─ companion_bringup/    ← launch files + config (places.yaml)
+│  ├─ companion_agent/      ← voice/text → multi-step commands
+│  ├─ companion_memory/     ← named places + people
+│  ├─ companion_behaviors/  ← patrol animations, behavior → emotion
+│  ├─ companion_body/       ← nav_bridge → Nav2, vendor status
+│  ├─ companion_voice/      ← STT/TTS USB audio (Whisper)
+│  ├─ companion_perception/ ← vision stub (Hailo Phase 3)
+│  ├─ companion_brain/      ← personality/empathy
+│  ├─ companion_face/       ← face renderer
+│  └─ vendor/               ← MentorPi drivers (fetched, not committed)
 └─ tools/                    ← helper scripts (e.g. 800-line guard)
 ```
 
@@ -44,7 +53,11 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build
 source install/setup.bash
 colcon test && colcon test-result --verbose   # lint + unit + integration
-ros2 launch companion_bringup demo.launch.py   # see the brain + face talk
+ros2 launch companion_bringup desktop_dev.launch.py          # PC prototype (face + memory)
+bash scripts/desktop_demo.sh                                 # same, one command from repo root
+ros2 launch companion_bringup companion_stack.launch.py   # dev / WSL
+ros2 launch companion_bringup mentorpi_deluxe.launch.py   # Pi 5 + MentorPi deluxe
+ros2 launch companion_bringup demo_face.launch.py          # face + voice personality demo
 ```
 
 > **Note:** ROS 2 runs on **Linux only** — build/run these in WSL2 or on the Pi, not in
