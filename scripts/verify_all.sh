@@ -26,16 +26,11 @@ for pkg in "${PACKAGES[@]}"; do
 done
 python3 tools/check_file_length.py tools
 
-echo ">>> ruff"
-if command -v ruff >/dev/null 2>&1; then
-  ruff check ros2_ws/src/companion_* tools
-else
-  pip3 install --user ruff >/dev/null 2>&1 || pip install --user ruff
-  ruff check ros2_ws/src/companion_* tools
-fi
+echo ">>> ruff (pinned in requirements-dev.txt)"
+ruff check ros2_ws/src/companion_* tools
 
 echo ">>> tools pytest (architecture + test honesty gates)"
-python3 -m pytest tools/test_check_file_length.py tools/test_companion_architecture.py tools/test_suite_honesty.py -q
+python3 -m pytest tools -q
 
 echo ">>> colcon build + test (lint + behavioral integration)"
 cd ros2_ws
