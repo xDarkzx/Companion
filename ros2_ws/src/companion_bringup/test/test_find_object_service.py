@@ -114,7 +114,8 @@ class TestFindObjectService(unittest.TestCase):
         self.assertFalse(before.found)
         self.assertEqual(before.reason, FindObject.Response.REASON_NO_FRAME)
 
-        self.assertTrue(wait_for_subscribers(self.rgb_pub), 'node never subscribed to RGB')
+        for pub in (self.rgb_pub, self.depth_pub, self.info_pub):
+            self.assertTrue(wait_for_subscribers(pub), 'node never subscribed to the camera')
         self.publish_camera()
 
         mug = self.call('mug')
