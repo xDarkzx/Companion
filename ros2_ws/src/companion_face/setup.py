@@ -1,3 +1,5 @@
+from glob import glob
+
 from setuptools import find_packages, setup
 
 package_name = 'companion_face'
@@ -9,6 +11,10 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (
+            'share/' + package_name + '/assets/sfx',
+            glob('assets/sfx/*', recursive=True),
+        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -20,6 +26,8 @@ setup(
     entry_points={
         'console_scripts': [
             'face_stub_node = companion_face.face_stub_node:main',
+            'face_ascii_node = companion_face.face_ascii_node:main',
+            'vision_preview_node = companion_face.vision_preview_node:main',
         ],
     },
 )

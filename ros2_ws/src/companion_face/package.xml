@@ -8,7 +8,11 @@
   <license>MIT</license>
 
   <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
   <depend>companion_interfaces</depend>
+  <depend>companion_memory</depend>
+
+  <exec_depend>python3-pygame</exec_depend>
 
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
