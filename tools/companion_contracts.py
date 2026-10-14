@@ -34,7 +34,7 @@ AGENT_STATE_VALUES = frozenset({
 
 # --- Behavior vocabulary (BehaviorRequest.msg + behavior_modes.py) ---
 VALID_BEHAVIORS = frozenset({
-    'idle', 'follow', 'patrol', 'go_to_place', 'harass_dog', 'explore', 'stop', 'go_home',
+    'idle', 'follow', 'patrol', 'go_to_place', 'play_with_dog', 'explore', 'stop', 'go_home',
 })
 
 BEHAVIOR_EMOTIONS = {
@@ -42,7 +42,7 @@ BEHAVIOR_EMOTIONS = {
     'follow': 'happy',
     'patrol': 'neutral',
     'go_to_place': 'happy',
-    'harass_dog': 'happy',
+    'play_with_dog': 'happy',
     'explore': 'surprise',
     'stop': 'neutral',
     'go_home': 'love',

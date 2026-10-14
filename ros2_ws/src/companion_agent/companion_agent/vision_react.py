@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from companion_agent.parse_command import CommandStep
 
-VALID_VISION_HINTS = frozenset({'follow', 'harass_dog'})
+VALID_VISION_HINTS = frozenset({'follow', 'play_with_dog'})
 
 
 def should_react_to_hint(

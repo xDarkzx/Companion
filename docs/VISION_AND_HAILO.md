@@ -11,7 +11,7 @@ How AI models fit the Companion stack — and what the **13 TOPS Hailo hat** doe
 ```
 Camera → Hailo YOLO → "dog at (x,y)"
               ↓
-     companion_behaviors ("harass_dog"?)
+     companion_behaviors ("play_with_dog"?)
               ↓
          Nav2 path plan
               ↓
@@ -59,7 +59,7 @@ Extend `detector_node` with a Hailo-backed inference path:
 Detections feed:
 
 - **Follow me** — person bbox → Nav2 dynamic follow (`/goal_update`)
-- **Harass the dog** — `dog` class → playful follow + happy face
+- **Play with the dog** — `dog` class → playful follow + happy face
 - **HumanEmotion** — face crop → empathy brain (MOAT)
 
 ---

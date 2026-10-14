@@ -80,7 +80,7 @@ def _normalize_token(part: str) -> str:
 def _single_behavior(part: str) -> str | None:
     """Map a single clause to a canonical behavior."""
     phrase_map = (
-        ('harass the dog', 'harass_dog'),
+        ('play with the dog', 'play_with_dog'),
         ('patrol the home', 'patrol'),
         ('patrol home', 'patrol'),
         ('patrol', 'patrol'),
@@ -96,7 +96,7 @@ def _single_behavior(part: str) -> str | None:
 
     token = _normalize_token(part)
     allowed = {
-        'idle', 'follow', 'patrol', 'harass_dog', 'explore', 'stop', 'go_home',
+        'idle', 'follow', 'patrol', 'play_with_dog', 'explore', 'stop', 'go_home',
     }
     if token in allowed:
         return token
@@ -122,7 +122,7 @@ def plan_to_reply(plan: CommandPlan) -> str:
                 'follow': 'follow',
                 'explore': 'explore',
                 'go_home': 'go_home',
-                'harass_dog': 'on_it',
+                'play_with_dog': 'on_it',
                 'idle': 'standing_by',
                 'stop': 'stop',
             }

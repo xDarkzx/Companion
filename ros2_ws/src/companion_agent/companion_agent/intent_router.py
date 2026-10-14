@@ -1,12 +1,12 @@
 """Map natural-language phrases to companion behavior names (legacy simple router)."""
 _SIMPLE_BEHAVIORS = frozenset({
-    'idle', 'follow', 'patrol', 'harass_dog', 'explore', 'stop', 'go_home',
+    'idle', 'follow', 'patrol', 'play_with_dog', 'explore', 'stop', 'go_home',
 })
 
 _PHRASE_MAP = (
-    ('harass the dog', 'harass_dog'),
-    ('harass dog', 'harass_dog'),
-    ('chase the dog', 'harass_dog'),
+    ('play with the dog', 'play_with_dog'),
+    ('play with dog', 'play_with_dog'),
+    ('chase the dog', 'play_with_dog'),
     ('patrol the home', 'patrol'),
     ('patrol home', 'patrol'),
     ('follow me', 'follow'),

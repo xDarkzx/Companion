@@ -5,7 +5,7 @@ import pytest
 
 def test_normalize_aliases():
     assert normalize_behavior('follow-me') == 'follow'
-    assert normalize_behavior('harass the dog') == 'harass_dog'
+    assert normalize_behavior('play with the dog') == 'play_with_dog'
 
 
 def test_invalid_behavior():

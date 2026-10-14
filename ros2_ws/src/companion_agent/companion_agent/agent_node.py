@@ -254,7 +254,7 @@ class AgentNode(Node):
         self._publish_state('idle', status_text='ready')
 
     def _on_detection_hint(self, msg: String) -> None:
-        """Optionally trigger follow/harass from vision when the agent is idle."""
+        """Optionally trigger follow/play from vision when the agent is idle."""
         now = self.get_clock().now().nanoseconds / 1e9
         cooldown_ok = (now - self._last_vision_hint_at) >= self._vision_cooldown
         if not should_react_to_hint(

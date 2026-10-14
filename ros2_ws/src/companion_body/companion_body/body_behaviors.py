@@ -5,7 +5,7 @@ from __future__ import annotations
 NAV_MAP_BEHAVIORS = frozenset({'go_to_place', 'go_home', 'stop'})
 
 # Behaviors that start continuous motion modes (Nav2 follow / explore — Phase 3).
-MOTION_BEHAVIORS = frozenset({'follow', 'patrol', 'explore', 'harass_dog'})
+MOTION_BEHAVIORS = frozenset({'follow', 'patrol', 'explore', 'play_with_dog'})
 
 
 def motion_status_for(behavior: str) -> str | None:

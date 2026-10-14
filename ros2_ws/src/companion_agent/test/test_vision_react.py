@@ -53,9 +53,9 @@ def test_ignored_during_cooldown():
 
 
 def test_hint_to_step_maps_dog():
-    step = hint_to_step('harass_dog')
+    step = hint_to_step('play_with_dog')
     assert step is not None
-    assert step.behavior == 'harass_dog'
+    assert step.behavior == 'play_with_dog'
 
 
 def test_unknown_hint_returns_none():

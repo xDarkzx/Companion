@@ -3,7 +3,7 @@
 <package format="3">
   <name>companion_behaviors</name>
   <version>0.1.0</version>
-  <description>High-level behaviors: follow, patrol, harass-dog, etc.</description>
+  <description>High-level behaviors: follow, patrol, play-with-dog, etc.</description>
   <maintainer email="dkstudiosnz@gmail.com">Dan</maintainer>
   <license>Apache-2.0</license>
 

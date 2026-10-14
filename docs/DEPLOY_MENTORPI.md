@@ -124,7 +124,7 @@ ROSA custom tools call the same `/companion/behavior_request` topic as `companio
 
 - Steering servos: run Hiwonder `Servo.sh` calibration on stock SD before reflash, save offsets
 - Chassis param: `MentorPi_Acker` in vendor launch YAML
-- Max speed for "harass dog" mode: cap in `companion_behaviors` params (Phase 3)
+- Max speed for "play with dog" mode: cap in `companion_behaviors` params (Phase 3)
 
 ---
 

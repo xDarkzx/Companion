@@ -120,7 +120,7 @@ _Update this after every meaningful chunk of work. This is how we stay on path._
 | 2026-05-28 | **MentorPi Deluxe target** — Ackermann + depth cam + voice box | Primary body for Pi 5 deployment |
 | 2026-05-28 | **ASCII face, not PNG** | Image pipeline degraded art; procedural grid matches LCD + Phase 2 |
 | 2026-05-28 | **Enterprise building blocks** — agent, behaviors, body, perception | Professional Nav2 + vendor + Companion layers |
-| 2026-05-28 | **Vision hints → agent** — `react_to_vision` + cooldown | Phase 3 MOAT: person/dog detections can trigger follow/harass when idle |
+| 2026-05-28 | **Vision hints → agent** — `react_to_vision` + cooldown | Phase 3 MOAT: person/dog detections can trigger follow/play when idle |
 
 ## Parked for later phases (recorded so we don't lose them — NOT built now)
 

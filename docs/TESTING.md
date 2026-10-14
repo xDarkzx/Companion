@@ -71,7 +71,7 @@ Tests run in WSL without hardware. They validate **contracts** the nodes rely on
 | Places memory | `test_places_store.py` | YAML → map coordinates |
 | Session buffer | `test_session_memory.py` | Bounded chat history → RAG context |
 | Empathy MOAT | `test_human_to_robot.py` | Human affect → robot emotion |
-| Detection router | `test_detection_router.py` | person/dog → follow/harass hints |
+| Detection router | `test_detection_router.py` | person/dog → follow/play hints |
 | Vision react | `test_vision_react.py` | Hint gating + cooldown rules |
 | Goal poses | `test_goal_pose_builder.py` | Place → Nav2 PoseStamped |
 | Patrol animation | `test_patrol_animator.py` | Emotion cycle during patrol |

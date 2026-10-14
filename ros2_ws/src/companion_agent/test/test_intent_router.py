@@ -10,8 +10,8 @@ def test_patrol():
     assert route_intent('go patrol the home please') == 'patrol'
 
 
-def test_harass_dog():
-    assert route_intent('go harass the dog') == 'harass_dog'
+def test_play_with_dog():
+    assert route_intent('go play with the dog') == 'play_with_dog'
 
 
 def test_unknown():

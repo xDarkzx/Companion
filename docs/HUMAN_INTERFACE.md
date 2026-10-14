@@ -90,7 +90,7 @@ Future: face embedding ID, voice profile, bond level.
 | `patrol` / `patrol the home` | Waypoint / random patrol + **face animation cycle** |
 | `go to kitchen` | Navigate to named place |
 | `go to kitchen and patrol` | **Sequence**: kitchen → patrol |
-| `harass the dog` | Playful dog chase (YOLO + follow, Phase 3) |
+| `play with the dog` | Playful dog chase (YOLO + follow, Phase 3) |
 | `go home` | Navigate to `dock` or `home` in places.yaml |
 | `stop` | **Immediate** — clears plan, idle face |
 

@@ -13,7 +13,7 @@ PLACES = frozenset({'kitchen', 'bedroom', 'dock'})
         ('follow me', [('follow', '')]),
         ('go explore', [('explore', '')]),
         ('go home', [('go_home', '')]),
-        ('harass the dog', [('harass_dog', '')]),
+        ('play with the dog', [('play_with_dog', '')]),
         ('stop', [('stop', '')]),
         ('stop now', [('stop', '')]),
         ('go to kitchen', [('go_to_place', 'kitchen')]),

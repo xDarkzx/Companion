@@ -25,10 +25,10 @@ def primary_target(detections: list[Detection], min_confidence: float = 0.4) -> 
 
 
 def behavior_hint(detections: list[Detection], min_confidence: float = 0.4) -> str | None:
-    """Suggest follow or harass_dog from detections (None if no action)."""
+    """Suggest follow or play_with_dog from detections (None if no action)."""
     target = primary_target(detections, min_confidence)
     if target in DOG_LABELS:
-        return 'harass_dog'
+        return 'play_with_dog'
     if target in PERSON_LABELS:
         return 'follow'
     return None

@@ -11,8 +11,8 @@ def _det(label: str, confidence: float) -> Detection:
     return msg
 
 
-def test_dog_hints_harass():
-    assert behavior_hint([_det('dog', 0.8)]) == 'harass_dog'
+def test_dog_hints_play():
+    assert behavior_hint([_det('dog', 0.8)]) == 'play_with_dog'
 
 
 def test_person_hints_follow():

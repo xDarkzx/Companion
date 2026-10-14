@@ -91,7 +91,7 @@ class MotionController:
         self._dispatch_patrol_goal()
 
     def acknowledge_motion(self, behavior: str) -> None:
-        """Publish status for explore/harass without Nav2 wiring yet."""
+        """Publish status for explore/play without Nav2 wiring yet."""
         self._follow_active = False
         self._patrol_active = False
         self._cancel_timers()

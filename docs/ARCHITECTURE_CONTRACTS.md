@@ -72,7 +72,7 @@ External vendor topics (not under `/companion/`): MentorPi ascamera RGB/depth
 
 `BehaviorRequest.behavior` must be one of:
 
-`idle`, `follow`, `patrol`, `go_to_place`, `harass_dog`, `explore`, `stop`, `go_home`
+`idle`, `follow`, `patrol`, `go_to_place`, `play_with_dog`, `explore`, `stop`, `go_home`
 
 Each maps to a face emotion via `companion_behaviors/behavior_modes.py`
 (`BEHAVIOR_EMOTIONS`).

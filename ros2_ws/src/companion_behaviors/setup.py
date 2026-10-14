@@ -14,7 +14,7 @@ setup(
     zip_safe=True,
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
-    description='High-level behaviors: follow, patrol, harass-dog, etc.',
+    description='High-level behaviors: follow, patrol, play-with-dog, etc.',
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={

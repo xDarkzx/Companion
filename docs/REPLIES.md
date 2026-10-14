@@ -31,7 +31,7 @@ bash scripts/robot_voice_lab.sh espeak_chibi   # skip preview
 | `go_home` | Go home | Heading home. |
 | `stop` | Stop command | Stopping now. |
 | `standing_by` | Idle | Standing by. |
-| `on_it` | Harass dog / quick ack | On it. |
+| `on_it` | Play with dog / quick ack | On it. |
 | `remember_ok` | Stored a fact | Got it. I'll remember that. |
 | `recall_lead` | Recalling memory (clip) | I remember. |
 | `no_memory` | Nothing stored | I don't have that saved yet. |
