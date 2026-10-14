@@ -77,30 +77,9 @@ def _nyu(results: dict) -> str:
     return '\n'.join(lines) + '\n' + _source(keys)
 
 
-def _latency(results: dict) -> str:
-    keys = [k for k in results if k.startswith('latency_')]
-    if not keys:
-        return ''
-    lines = ['### Speed (200 NYU frames, after 10 warm-up frames)', '',
-             '| Detector | Device | Detect p50 / p95 | Monocular depth p50 / p95 | '
-             'End to end p50 / p95 |',
-             '|---|---|---|---|---|']
-    for key in keys:
-        r = results[key]
-        m = r['metrics']
-        name = NAMES.get(r['settings']['backend'], r['settings']['backend'])
-
-        def pair(stage: str) -> str:
-            return f"{m[stage]['p50_ms']:.0f} / {m[stage]['p95_ms']:.0f} ms"
-
-        lines.append(f"| {name} | {r['device']} | {pair('detect')} | {pair('depth')} | "
-                     f"{pair('total')} |")
-    return '\n'.join(lines) + '\n' + _source(keys)
-
-
 def render_tables(results: dict) -> str:
     """Markdown for every benchmark that has results, in a fixed order."""
-    sections = [s for s in (_coco(results), _nyu(results), _latency(results)) if s]
+    sections = [s for s in (_coco(results), _nyu(results)) if s]
     return '\n'.join(sections)
 
 

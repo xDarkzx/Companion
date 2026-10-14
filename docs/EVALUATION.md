@@ -8,14 +8,13 @@ and the files disagree.
 
 ## What is measured, and why
 
-A robot that is asked "where is the red mug?" has to get three things right, so there are three
-benchmarks.
+A robot that is asked "where is the red mug?" has to find the object and place it in 3D, so
+there are two benchmarks.
 
 | Question | Benchmark | Script |
 |---|---|---|
 | Does it find the object it was asked for? | COCO val2017: all 5,000 images, with the 80 class names as the text queries | [`coco_detection.py`](../eval/coco_detection.py) |
 | Does it put the object in the right place in 3D? | NYU Depth V2 labelled set, official 654-frame test split, 14 household classes | [`nyu_localization.py`](../eval/nyu_localization.py) |
-| Is it fast enough to use on a robot? | 200 fixed NYU frames, after 10 warm-up frames | [`latency.py`](../eval/latency.py) |
 
 ### Finding objects (COCO)
 
@@ -42,15 +41,33 @@ benchmarks.
     as a robot with only a webcam would have to work.
 - **Error:** the straight-line distance between the estimated position and the ground truth.
 
-### Speed
-
-Detection, monocular depth and localisation are timed separately for each frame at 640 × 480,
-with batch size 1 and fp32. These numbers are only meaningful when nothing else is using the
-GPU.
-
 ## Results
 
 <!-- results:start -->
+### Finding named objects (COCO val2017)
+
+| Detector | AP | AP50 | AP small | AP medium | AP large |
+|---|---|---|---|---|---|
+| OWLv2 | 0.436 | 0.644 | 0.306 | 0.463 | 0.587 |
+
+Source: `eval/results/coco_owlv2.json`.
+
+### Placing objects in 3D (NYU Depth V2 test split)
+
+| Detector | Objects | Found (IoU ≥ 0.5) | Depth source | Median error | Within 10 cm | Within 25 cm |
+|---|---|---|---|---|---|---|
+| Grounding DINO tiny | 2062 | 0.750 | Depth camera (raw) | 5.4 cm | 0.662 | 0.853 |
+| Grounding DINO tiny | 2062 | 0.750 | Monocular estimate | 46.7 cm | 0.077 | 0.245 |
+| OWLv2 | 2062 | 0.771 | Depth camera (raw) | 5.4 cm | 0.672 | 0.862 |
+| OWLv2 | 2062 | 0.771 | Monocular estimate | 47.0 cm | 0.075 | 0.245 |
+
+### Monocular depth quality (NYU Depth V2 test split, every valid pixel)
+
+| AbsRel | δ < 1.25 | Median scale (truth ÷ estimate) | AbsRel after median scaling |
+|---|---|---|---|
+| 0.219 | 0.668 | 0.866 | 0.082 |
+
+Source: `eval/results/nyu_localization_grounding_dino.json`, `eval/results/nyu_localization_owlv2.json`.
 <!-- results:end -->
 
 ## Reproducing
@@ -73,7 +90,6 @@ GPU.
    ```bash
    python eval/coco_detection.py --backend owlv2
    python eval/nyu_localization.py --backend owlv2
-   python eval/latency.py --backend owlv2 --device cuda
    python eval/report.py
    ```
 

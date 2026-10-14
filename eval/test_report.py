@@ -15,7 +15,7 @@ def results():
 def test_tables_show_each_benchmark_that_has_results():
     text = render_tables(results())
     assert '| OWLv2 | 0.410 | 0.600 | 0.200 | 0.450 | 0.550 |' in text
-    assert '250' not in text  # speed comes from the latency benchmark, run on an idle GPU
+    assert '250' not in text  # per-image time is not reported: it was measured on a shared GPU
     assert 'eval/results/coco_owlv2.json' in text
 
 

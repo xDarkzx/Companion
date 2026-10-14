@@ -1,0 +1,78 @@
+{
+  "benchmark": "nyu_localization_owlv2",
+  "date": "2026-10-14",
+  "git_commit": "872ccd4",
+  "python": "3.11.9",
+  "device": "NVIDIA GeForce RTX 5070",
+  "models": {
+    "detector": "google/owlv2-base-patch16-ensemble@cfd3195ba4ea9592eec887ded089f4c08eff231d",
+    "monocular_depth": "depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf@8078d68a9c75a972131914f6afd0c1723be0da7f"
+  },
+  "settings": {
+    "dataset": "NYU Depth V2 labelled, official test split",
+    "classes": [
+      "chair",
+      "table",
+      "sofa",
+      "bed",
+      "pillow",
+      "lamp",
+      "monitor",
+      "television",
+      "cabinet",
+      "door",
+      "bottle",
+      "cup",
+      "book",
+      "box"
+    ],
+    "match_iou": 0.5,
+    "score_threshold": 0.2,
+    "max_boxes": 20,
+    "min_object_pixels": 500,
+    "valid_region": "Eigen crop",
+    "ground_truth": "median 3D point of the object mask on in-filled depth",
+    "sensor_path": "rawDepths (holes kept)",
+    "precision": "fp32"
+  },
+  "metrics": {
+    "frames": 654,
+    "objects": 2062,
+    "detection_recall_iou50": 0.771,
+    "per_class_recall": {
+      "chair": 0.866,
+      "table": 0.692,
+      "sofa": 0.885,
+      "bed": 0.824,
+      "pillow": 0.922,
+      "lamp": 0.821,
+      "monitor": 0.934,
+      "television": 1.0,
+      "cabinet": 0.663,
+      "door": 0.607,
+      "bottle": 0.621,
+      "cup": 0.735,
+      "book": 0.532,
+      "box": 0.585
+    },
+    "sensor_depth": {
+      "objects": 1494,
+      "median_error_cm": 5.4,
+      "within_10cm": 0.672,
+      "within_25cm": 0.862,
+      "unplaced": 96
+    },
+    "monocular_depth": {
+      "objects": 1585,
+      "median_error_cm": 47.0,
+      "within_10cm": 0.075,
+      "within_25cm": 0.245
+    },
+    "monocular_depth_map": {
+      "abs_rel": 0.219,
+      "delta1": 0.668,
+      "median_scale_bias": 0.866,
+      "abs_rel_after_per_frame_median_scaling": 0.0824
+    }
+  }
+}
