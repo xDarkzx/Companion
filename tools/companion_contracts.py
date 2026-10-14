@@ -193,6 +193,6 @@ SERVICE_CONTRACTS: dict[str, ServiceContract] = {
     '/companion/find_object': ServiceContract(
         srv_type='FindObject',
         servers=frozenset({'companion_perception'}),
-        clients=frozenset(),
+        clients=frozenset({'companion_agent'}),
     ),
 }

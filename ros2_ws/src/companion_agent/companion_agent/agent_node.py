@@ -3,6 +3,9 @@ from pathlib import Path
 
 from companion_agent.conversational_reply import conversational_reply, reply_for_plan
 from companion_agent.fact_recall import try_recall_reply
+from companion_agent.find_intent import parse_find
+from companion_agent.find_object_client import FindObjectClient, REASON_UNAVAILABLE
+from companion_agent.object_answer import answer_for, answer_unavailable
 from companion_agent.parse_command import CommandStep, parse_command
 from companion_agent.remember_command import parse_remember_fact
 from companion_agent.reply_templates import boot_greeting_text
@@ -50,6 +53,7 @@ class AgentNode(Node):
         self.declare_parameter('welcome_message', '')
         self.declare_parameter('speak_welcome', True)
         self.declare_parameter('welcome_delay_sec', 2.0)
+        self.declare_parameter('find_timeout_sec', 3.0)
 
         self._intensity = float(self.get_parameter('default_intensity').value)
         self._step_delay = float(self.get_parameter('step_delay_sec').value)
@@ -97,6 +101,9 @@ class AgentNode(Node):
             delay = float(self.get_parameter('welcome_delay_sec').value)
             self._welcome_timer = self.create_timer(delay, self._speak_welcome_once)
 
+        self._finder = FindObjectClient(
+            self, float(self.get_parameter('find_timeout_sec').value))
+
         names = ', '.join(sorted(self._known_places)) or '(none)'
         self.get_logger().info(
             f'AgentNode on {COMMAND_TOPIC}; places: {names}; llm={self._provider}'
@@ -112,6 +119,11 @@ class AgentNode(Node):
         remember = parse_remember_fact(msg.data)
         if remember is not None:
             self._handle_remember(remember)
+            return
+
+        target = parse_find(msg.data)
+        if target is not None:
+            self._handle_find(target)
             return
 
         rag_used, memory_count, summary = retrieve_context(
@@ -211,6 +223,20 @@ class AgentNode(Node):
         )
         self._publish_state('acting', status_text='executing')
         self._run_next_step()
+
+    def _handle_find(self, target: str) -> None:
+        """Ask perception where the target is and say the answer."""
+        self._publish_state('retrieving', status_text=f'looking for {target}'[:40])
+
+        def on_result(found, position, reason) -> None:
+            if reason == REASON_UNAVAILABLE:
+                self._speak(answer_unavailable())
+            else:
+                self._speak(answer_for(target, found, position, reason))
+            self._publish_state('idle', status_text='ready')
+            self.get_logger().info(f'find {target!r}: {reason}')
+
+        self._finder.request(target, on_result)
 
     def _handle_remember(self, fact_text: str) -> None:
         """Persist a user fact when Tier 3 memory is enabled."""
