@@ -32,7 +32,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: colcon-test-results
-          path: ros2_ws/build/*/test_results/
+          path: |
+            ros2_ws/build/*/test_results/
+            ros2_ws/log/latest_test/
           if-no-files-found: ignore
 
   vision:
