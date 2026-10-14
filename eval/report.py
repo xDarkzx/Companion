@@ -37,14 +37,13 @@ def _coco(results: dict) -> str:
     if not keys:
         return ''
     lines = ['### Finding named objects (COCO val2017)', '',
-             '| Detector | AP | AP50 | AP small | AP medium | AP large | ms per image (p50) |',
-             '|---|---|---|---|---|---|---|']
+             '| Detector | AP | AP50 | AP small | AP medium | AP large |',
+             '|---|---|---|---|---|---|']
     for key in keys:
         m = results[key]['metrics']
         name = NAMES.get(key.removeprefix('coco_'), key)
         lines.append(f"| {name} | {_fmt(m['AP'])} | {_fmt(m['AP50'])} | {_fmt(m['AP_small'])} | "
-                     f"{_fmt(m['AP_medium'])} | {_fmt(m['AP_large'])} | "
-                     f"{m['ms_per_image_p50']:.0f} |")
+                     f"{_fmt(m['AP_medium'])} | {_fmt(m['AP_large'])} |")
     return '\n'.join(lines) + '\n' + _source(keys)
 
 
