@@ -1,27 +1,28 @@
-# ROS 2 / colcon build artifacts
+# Vendor driver trees (fetched by scripts/fetch_mentorpi_vendor.sh)
+ros2_ws/src/vendor/*
+!ros2_ws/src/vendor/README.md
+!ros2_ws/src/vendor/COLCON_IGNORE
+tts/cache/
+
+# Build and test output
 build/
 install/
 log/
-
-# Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-.eggs/
+*.pyc
 .pytest_cache/
 .ruff_cache/
+coverage.xml
+
+# Local environments and downloads
 .venv/
-venv/
+.desktop_deps_ok
+models/
+*.onnx
+*.pt
 
-# OS / editor
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/*
-!.vscode/extensions.json
+# Generated voice clips (made locally by scripts/robot_voice_lab.sh)
+ros2_ws/src/companion_voice/assets/phrases/*.wav
 
-# Misc
-*.log
-
-# Third-party reference material (study-only, e.g. CC BY-NC) — never shipped/committed
-reference/
+# Tooling scratch
+.superpowers/
