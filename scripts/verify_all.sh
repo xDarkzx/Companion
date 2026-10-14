@@ -15,6 +15,7 @@ PACKAGES=(
   companion_body
   companion_perception
   companion_voice
+  companion_vision
   companion_bringup
 )
 
