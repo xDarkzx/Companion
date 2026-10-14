@@ -24,7 +24,6 @@ def _launch_nodes(context, *args, **kwargs):
 
     voice_mode = LaunchConfiguration('voice_mode').perform(context)
     enable_vision = LaunchConfiguration('enable_vision').perform(context) == 'true'
-    model_path = LaunchConfiguration('model_path').perform(context).strip()
     piper_model = LaunchConfiguration('piper_model').perform(context).strip()
     resolved_piper = discover_piper_model(piper_model)
     voice_share = get_package_share_directory('companion_voice')
@@ -63,7 +62,7 @@ def _launch_nodes(context, *args, **kwargs):
     if enable_vision:
         agent_params.append(vision_cfg)
 
-    detector_params = [vision_cfg, {'model_path': model_path}] if enable_vision else []
+    detector_params = [vision_cfg] if enable_vision else []
 
     nodes = [
         Node(
@@ -126,8 +125,8 @@ def _launch_nodes(context, *args, **kwargs):
             ),
             Node(
                 package='companion_perception',
-                executable='detector_node',
-                name='detector_node',
+                executable='grounded_detector_node',
+                name='grounded_detector_node',
                 parameters=detector_params,
                 output='screen',
             ),
@@ -162,11 +161,6 @@ def generate_launch_description():
             'enable_vision',
             default_value='false',
             description='Launch USB webcam + detector + vision preview window',
-        ),
-        DeclareLaunchArgument(
-            'model_path',
-            default_value='',
-            description='Optional YOLO weights path (e.g. yolov8n.pt)',
         ),
         DeclareLaunchArgument(
             'piper_model',

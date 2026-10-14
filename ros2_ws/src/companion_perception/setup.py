@@ -14,12 +14,12 @@ setup(
     zip_safe=True,
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
-    description='Vision detectors (YOLO stub until Phase 3).',
+    description='Language-driven object finding, camera health and detection hints.',
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'detector_node = companion_perception.detector_node:main',
+            'grounded_detector_node = companion_perception.grounded_detector_node:main',
             'camera_watch_node = companion_perception.camera_watch_node:main',
             'human_emotion_stub_node = companion_perception.human_emotion_stub_node:main',
         ],

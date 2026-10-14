@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Optional CPU vision deps for Phase 3 (YOLO on Pi before Hailo).
+# Install the vision model stack for grounded_detector_node on a CPU-only machine (Pi 5).
 set -eo pipefail
 
-echo ">>> Python vision deps (optional Ultralytics YOLO)"
-pip3 install --user 'numpy<2' ultralytics 2>/dev/null || {
-  echo "WARN: ultralytics not installed — detector stays in stub mode"
-}
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-echo "DONE_OK — set model_path in config/perception.yaml (e.g. yolov8n.pt)"
+echo ">>> CPU PyTorch + transformers for OWLv2 / Grounding DINO / Depth Anything"
+pip3 install --user --break-system-packages torch --index-url https://download.pytorch.org/whl/cpu
+pip3 install --user --break-system-packages -e "$ROOT/ros2_ws/src/companion_vision[models]"
+
+echo "DONE_OK — choose backend and depth_mode in companion_bringup/config/perception.yaml"

@@ -6,7 +6,6 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WS="$ROOT/ros2_ws"
 VOICE_MODE="${1:-whisper}"
 ENABLE_VISION="${2:-false}"
-MODEL_PATH="${3:-}"
 export COMPANION_ROOT="$ROOT"
 # WSLg routes mic + speakers through PulseAudio (PortAudio often sees nothing).
 export PULSE_SERVER="${PULSE_SERVER:-unix:/mnt/wslg/PulseServer}"
@@ -75,9 +74,9 @@ if [[ "$ENABLE_VISION" == "true" ]]; then
     sudo apt-get update
     sudo apt-get install -y ros-jazzy-usb-cam
   fi
-  if [[ -n "$MODEL_PATH" ]] && ! python3 -c "import ultralytics" 2>/dev/null; then
-    echo ">>> Installing YOLO deps (one time)..."
-    pip3 install --break-system-packages ultralytics
+  if ! python3 -c "import companion_vision.backends.owlv2, transformers" 2>/dev/null; then
+    echo ">>> Installing vision model deps (one time)..."
+    pip3 install --break-system-packages -e "$ROOT/ros2_ws/src/companion_vision[models]"
   fi
 fi
 
@@ -104,9 +103,6 @@ echo ""
 
 LAUNCH_ARGS=(voice_mode:="$VOICE_MODE" enable_vision:="$ENABLE_VISION")
 
-if [[ -n "$MODEL_PATH" ]]; then
-  LAUNCH_ARGS+=(model_path:="$MODEL_PATH")
-fi
 
 cd "$WS"
 exec ros2 launch companion_bringup desktop_dev.launch.py "${LAUNCH_ARGS[@]}"

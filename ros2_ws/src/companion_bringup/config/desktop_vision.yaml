@@ -1,14 +1,16 @@
 # USB webcam + detector overrides for desktop_dev (enable_vision:=true)
 
-detector_node:
+grounded_detector_node:
   ros__parameters:
+    backend: owlv2
+    device: auto
+    depth_mode: monocular    # a webcam has no depth sensor
+    score_threshold: 0.2
+    watch_labels: [person, dog]
+    watch_rate_hz: 1.0
     rgb_topic: /image_raw
-    use_camera: true
-    model_path: ""
-    publish_rate_hz: 2.0
-    frame_width: 640
-    frame_height: 480
-    source_label: desktop_usb
+    depth_topic: /companion/unused_depth
+    camera_info_topic: /camera_info
 
 camera_watch_node:
   ros__parameters:

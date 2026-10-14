@@ -1,4 +1,4 @@
-"""Convert sensor_msgs/Image to numpy arrays for CPU vision (no cv_bridge required)."""
+"""Convert between sensor_msgs/Image and numpy arrays (no cv_bridge required)."""
 from __future__ import annotations
 
 from sensor_msgs.msg import Image
@@ -34,3 +34,39 @@ def image_to_bgr(msg: Image):
     if encoding == 'rgb8':
         return frame[:, :, ::-1].copy()
     return frame.copy()
+
+
+def image_to_rgb(msg: Image):
+    """Return an HxWx3 RGB uint8 array (what the vision models expect), or None."""
+    bgr = image_to_bgr(msg)
+    return None if bgr is None else bgr[:, :, ::-1].copy()
+
+
+_DEPTH_DTYPES = {'16uc1': '<u2', 'mono16': '<u2', '32fc1': '<f4'}
+
+
+def depth_image_to_array(msg: Image):
+    """Return depth as HxW uint16 millimetres (16UC1) or float32 metres (32FC1), or None."""
+    import numpy as np
+
+    dtype = _DEPTH_DTYPES.get(msg.encoding.strip().lower())
+    if dtype is None or msg.height < 1 or msg.width < 1:
+        return None
+    itemsize = np.dtype(dtype).itemsize
+    row_bytes = msg.step if msg.step > 0 else msg.width * itemsize
+    needed = row_bytes * msg.height
+    if len(msg.data) < needed:
+        return None
+    rows = np.frombuffer(bytes(msg.data[:needed]), dtype=np.uint8).reshape(msg.height, row_bytes)
+    pixels = rows[:, : msg.width * itemsize].copy().view(dtype)
+    return pixels.reshape(msg.height, msg.width).astype(dtype[1:])
+
+
+def rgb_to_image(rgb) -> Image:
+    """Wrap an HxWx3 RGB uint8 array as an rgb8 sensor_msgs/Image."""
+    msg = Image()
+    msg.height, msg.width = int(rgb.shape[0]), int(rgb.shape[1])
+    msg.encoding = 'rgb8'
+    msg.step = msg.width * 3
+    msg.data = rgb.astype('uint8', copy=False).tobytes()
+    return msg
