@@ -15,6 +15,6 @@ setup(
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
     description='Named places and people memory for voice commands.',
-    license='MIT',
+    license='Apache-2.0',
     tests_require=['pytest'],
 )

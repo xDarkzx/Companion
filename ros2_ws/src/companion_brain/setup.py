@@ -15,7 +15,7 @@ setup(
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
     description="The decision-maker: chooses the robot's emotion (stub in Phase 1).",
-    license='MIT',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

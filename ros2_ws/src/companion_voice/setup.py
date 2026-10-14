@@ -21,7 +21,7 @@ setup(
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
     description='STT/TTS voice bridge (Whisper + USB audio).',
-    license='MIT',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

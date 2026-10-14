@@ -15,7 +15,7 @@ setup(
     maintainer='Dan',
     maintainer_email='dkstudiosnz@gmail.com',
     description='MentorPi vendor integration and body status.',
-    license='MIT',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
