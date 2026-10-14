@@ -65,6 +65,7 @@ ALLOWED_EXTERNAL_TOPICS = frozenset({
     '/ascamera/camera_publisher/rgb0/image',
     '/ascamera/camera_publisher/depth0/image_raw',
     '/ascamera/camera_publisher/rgb0/camera_info',
+    '/camera_info',  # usb_cam desktop prototype
 })
 
 COMPANION_PACKAGES = frozenset({
@@ -160,9 +161,38 @@ TOPIC_CONTRACTS: dict[str, TopicContract] = {
         publishers=frozenset({'companion_perception'}),
         subscribers=frozenset(),
     ),
+    '/companion/objects': TopicContract(
+        msg_type='Detection3DArray',
+        publishers=frozenset({'companion_perception'}),
+        subscribers=frozenset(),
+    ),
+    '/companion/perception/annotated': TopicContract(
+        msg_type='Image',
+        publishers=frozenset({'companion_perception'}),
+        subscribers=frozenset(),
+    ),
     '/goal_pose': TopicContract(
         msg_type='PoseStamped',
         publishers=frozenset({'companion_body'}),
         subscribers=frozenset(),
+    ),
+}
+
+
+@dataclass(frozen=True)
+class ServiceContract:
+    """One ROS service contract: service type and the packages allowed to serve or call it."""
+
+    srv_type: str
+    servers: frozenset[str]
+    clients: frozenset[str]
+
+
+# Service graph — must match docs/ARCHITECTURE_CONTRACTS.md
+SERVICE_CONTRACTS: dict[str, ServiceContract] = {
+    '/companion/find_object': ServiceContract(
+        srv_type='FindObject',
+        servers=frozenset({'companion_perception'}),
+        clients=frozenset(),
     ),
 }

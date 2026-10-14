@@ -10,7 +10,7 @@ sys.path.insert(0, str(_TOOLS))
 sys.path.insert(0, str(_ROOT / 'ros2_ws' / 'src' / 'companion_memory'))
 
 from check_file_length import find_violations  # noqa: E402
-from companion_contracts import TOPIC_CONTRACTS  # noqa: E402
+from companion_contracts import SERVICE_CONTRACTS, TOPIC_CONTRACTS  # noqa: E402
 from companion_memory.places_contract import REFERENCE_PLACES as MEMORY_PLACES  # noqa: E402
 from validate_companion_architecture import (  # noqa: E402
     collect_topic_constants,
@@ -116,6 +116,24 @@ def test_all_contract_topics_use_companion_namespace_or_allowlist():
         for _name, topic in collect_topic_constants(path).items():
             if topic in TOPIC_CONTRACTS or topic in ALLOWED_EXTERNAL_TOPICS:
                 continue
+            if topic in SERVICE_CONTRACTS:
+                continue
             if topic.startswith('/companion/'):
                 errors.append(f'{path}: undocumented companion topic {topic!r}')
     assert errors == [], '\n  '.join(errors)
+
+
+def test_listener_rule_accepts_tests_that_wait_on_process_output(tmp_path: Path):
+    """Asserting on a node's log or exit code waits on the process itself, not the graph."""
+    from validate_test_honesty import validate_listener_tests_warm_up  # noqa: WPS433
+
+    waits = tmp_path / 'test_waits.py'
+    waits.write_text(
+        '@pytest.mark.launch_test\n'
+        "proc_output.assertWaitFor('DetectorLoadError', process=NODE, timeout=30)\n",
+        encoding='utf-8',
+    )
+    racy = tmp_path / 'test_racy.py'
+    racy.write_text('@pytest.mark.launch_test\nassert received\n', encoding='utf-8')
+    assert validate_listener_tests_warm_up([waits]) == []
+    assert len(validate_listener_tests_warm_up([racy])) == 1

@@ -10,6 +10,8 @@ from companion_contracts import (
     COMPANION_PACKAGES,
     HARD_LINE_LIMIT,
     MAX_QOS_DEPTH,
+    SERVICE_CONTRACTS,
+    ServiceContract,
     SOFT_LINE_TARGET,
     TOPIC_CONTRACTS,
     VALID_BEHAVIORS,
@@ -301,6 +303,47 @@ def validate_behavior_msg_comment(src: Path) -> list[str]:
     return []
 
 
+def scan_services(path: Path) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    """Return (servers, clients) as (srv_type, service_name) pairs found in a module."""
+    text = path.read_text(encoding='utf-8')
+    constants = collect_topic_constants(path)
+    found: dict[str, list[tuple[str, str]]] = {'service': [], 'client': []}
+    for kind in found:
+        for srv_type, name_arg in re.findall(rf'create_{kind}\(\s*(\w+)\s*,\s*([^,\)]+)', text):
+            name = resolve_topic(name_arg, constants)
+            if name:
+                found[kind].append((srv_type, name))
+    return found['service'], found['client']
+
+
+def validate_services(
+    src: Path, contracts: dict[str, ServiceContract] = SERVICE_CONTRACTS,
+) -> list[str]:
+    """Every served or called service is registered, typed and owned by an allowed package."""
+    errors: list[str] = []
+    served: set[str] = set()
+    for path in iter_companion_python(src):
+        pkg = package_name_for(path, src)
+        servers, clients = scan_services(path)
+        for role, entries in (('serve', servers), ('call', clients)):
+            for srv_type, name in entries:
+                contract = contracts.get(name)
+                if contract is None:
+                    errors.append(f'{path}: undocumented service {name!r}')
+                    continue
+                if srv_type != contract.srv_type:
+                    errors.append(f'{path}: {name} must use {contract.srv_type}, not {srv_type}')
+                allowed = contract.servers if role == 'serve' else contract.clients
+                if pkg not in allowed:
+                    errors.append(f'{path}: package {pkg} may not {role} {name}')
+                if role == 'serve':
+                    served.add(name)
+    for name in contracts:
+        if name not in served:
+            errors.append(f'{name} has no server in codebase')
+    return errors
+
+
 def run_all_validators() -> list[str]:
     """Run every architecture validator and return combined error strings."""
     src = ros_src()
@@ -315,6 +358,7 @@ def run_all_validators() -> list[str]:
         validate_topic_message_types,
         validate_launch_executables,
         validate_behavior_msg_comment,
+        validate_services,
     ):
         errors.extend(validator(src))
     return errors

@@ -25,6 +25,8 @@ _LOOSE_COORD_RE = re.compile(
 
 # Listener-only launch tests must warm up DDS before asserting.
 _WARMUP_RE = re.compile(r'warm_up_dds|spin_until|spin_once')
+# Asserting on a node's log or exit code waits on the process itself, not on graph discovery.
+_PROCESS_WAIT_RE = re.compile(r'proc_output\.assertWaitFor|assertExitCodes')
 
 _INTEGRATION_DIR_NAMES = ('test',)
 
@@ -83,7 +85,7 @@ def validate_listener_tests_warm_up(test_files: list[Path]) -> list[str]:
             continue
         if _PUBLISHER_RE.search(text):
             continue
-        if _WARMUP_RE.search(text):
+        if _WARMUP_RE.search(text) or _PROCESS_WAIT_RE.search(text):
             continue
         errors.append(
             f'{path}: listener-only launch test must warm_up_dds or spin before assert',
