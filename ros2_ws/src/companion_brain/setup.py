@@ -20,6 +20,8 @@ setup(
     entry_points={
         'console_scripts': [
             'heartbeat_node = companion_brain.heartbeat_node:main',
+            'voice_demo_node = companion_brain.voice_demo_node:main',
+            'empathy_node = companion_brain.empathy_node:main',
         ],
     },
 )
