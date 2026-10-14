@@ -54,6 +54,7 @@ Nodes communicate over **typed messages**, never by reaching into other packages
 | `/companion/voice_command` | `String` | voice | agent |
 | `/companion/agent_state` | `AgentState` | agent, voice | face |
 | `/companion/tts_request` | `String` | agent | voice |
+| `/companion/tts_playing` | `Bool` | voice (tts) | voice (stt mutes while speaking) |
 | `/companion/nav_status` | `String` | body | agent |
 | `/companion/detections` | `DetectionBatch` | perception | body (follow), face (preview) |
 | `/companion/detection_hint` | `String` | perception | agent |

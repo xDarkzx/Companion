@@ -124,6 +124,11 @@ TOPIC_CONTRACTS: dict[str, TopicContract] = {
         publishers=frozenset({'companion_agent'}),
         subscribers=frozenset({'companion_voice'}),
     ),
+    '/companion/tts_playing': TopicContract(
+        msg_type='Bool',
+        publishers=frozenset({'companion_voice'}),
+        subscribers=frozenset({'companion_voice'}),
+    ),
     '/companion/nav_status': TopicContract(
         msg_type='String',
         publishers=frozenset({'companion_body'}),
