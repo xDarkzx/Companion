@@ -8,6 +8,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(vision_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotEmotion.msg"
@@ -16,7 +17,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AgentState.msg"
   "msg/Detection.msg"
   "msg/DetectionBatch.msg"
-  DEPENDENCIES std_msgs
+  "srv/FindObject.srv"
+  DEPENDENCIES std_msgs vision_msgs
 )
 
 ament_package()

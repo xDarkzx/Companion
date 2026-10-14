@@ -1,0 +1,26 @@
+# Ask perception to find an object named in plain words, e.g. "red mug".
+# Served by companion_perception (grounded_detector_node); called by companion_agent.
+
+# Free text; must contain at least one word.
+string query
+---
+# Why a search ended the way it did, so callers can explain a miss without guessing.
+# ok: found, with at least one 3D position
+string REASON_OK=ok
+# no_match: nothing matching the query in the latest frame
+string REASON_NO_MATCH=no_match
+# no_depth: found in the image, but no valid depth to place it in 3D
+string REASON_NO_DEPTH=no_depth
+# no_frame: no camera image has arrived yet
+string REASON_NO_FRAME=no_frame
+# bad_query: the query had no words
+string REASON_BAD_QUERY=bad_query
+
+# True if the object is visible in the image.
+bool found
+# One of the REASON_* constants above.
+string reason
+# Every match in image pixels, best first.
+vision_msgs/Detection2DArray detections
+# Matches with a 3D position in the camera optical frame, best first.
+vision_msgs/Detection3DArray objects
