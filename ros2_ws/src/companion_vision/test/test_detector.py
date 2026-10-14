@@ -67,3 +67,27 @@ def test_missing_model_libraries_are_a_load_error_not_a_silent_fallback(monkeypa
     monkeypatch.setitem(sys.modules, 'transformers', None)
     with pytest.raises(DetectorLoadError, match='owlv2'):
         load_detector('owlv2', device='cpu')
+
+
+def test_finalize_caps_the_number_of_boxes():
+    from companion_vision.detector import finalize
+
+    many = [Detection2D('mug', 0.5, Box(i * 20.0, 0.0, i * 20.0 + 10.0, 10.0)) for i in range(30)]
+    assert len(finalize(many, score_threshold=0.1)) == 20
+    assert len(finalize(many, score_threshold=0.1, top_k=25)) == 25
+
+
+def test_load_detector_passes_settings_to_the_backend(monkeypatch):
+    import companion_vision.backends.owlv2 as owlv2
+
+    received = {}
+
+    class Recorder:
+        name = 'owlv2'
+
+        def __init__(self, **kwargs):
+            received.update(kwargs)
+
+    monkeypatch.setattr(owlv2, 'OwlV2Detector', Recorder)
+    load_detector('owlv2', device='cpu', score_threshold=0.05, top_k=100)
+    assert received == {'device': 'cpu', 'score_threshold': 0.05, 'revision': None, 'top_k': 100}
