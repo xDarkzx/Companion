@@ -48,6 +48,8 @@ class AgentNode(Node):
         self.declare_parameter('fact_db_path', '')
         self.declare_parameter('max_stored_facts', 500)
         self.declare_parameter('welcome_message', '')
+        self.declare_parameter('speak_welcome', True)
+        self.declare_parameter('welcome_delay_sec', 2.0)
 
         self._intensity = float(self.get_parameter('default_intensity').value)
         self._step_delay = float(self.get_parameter('step_delay_sec').value)
@@ -89,9 +91,11 @@ class AgentNode(Node):
 
         welcome = str(self.get_parameter('welcome_message').value).strip()
         self._welcome_timer = None
-        if self._speak_replies:
+        speak_welcome = bool(self.get_parameter('speak_welcome').value)
+        if self._speak_replies and speak_welcome:
             self._welcome_text = welcome
-            self._welcome_timer = self.create_timer(2.0, self._speak_welcome_once)
+            delay = float(self.get_parameter('welcome_delay_sec').value)
+            self._welcome_timer = self.create_timer(delay, self._speak_welcome_once)
 
         names = ', '.join(sorted(self._known_places)) or '(none)'
         self.get_logger().info(

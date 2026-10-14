@@ -12,6 +12,8 @@ agent_node:
     llm_provider: ollama          # none | ollama — natural replies when Ollama runs
     ollama_model: llama3.2
     ollama_base_url: http://127.0.0.1:11434
+    speak_welcome: true              # greet once at startup
+    welcome_delay_sec: 2.0
     welcome_message: random          # random = cached boot clip | or exact phrase
 
 stt_node:

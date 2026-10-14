@@ -34,6 +34,7 @@ def generate_test_description():
         'fact_db_path': fact_db,
         'max_stored_facts': 50,
         'speak_replies': True,
+        'speak_welcome': False,
         'wait_for_nav': False,
         'step_delay_sec': 0.2,
     }]
