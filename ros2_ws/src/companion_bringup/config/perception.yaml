@@ -1,14 +1,16 @@
 # Vision + empathy settings (Phase 3)
 
-detector_node:
+grounded_detector_node:
   ros__parameters:
-    model_path: ""           # e.g. yolov8n.pt on Pi
-    publish_rate_hz: 1.0
-    frame_width: 640
-    frame_height: 480
-    source_label: stub
+    backend: owlv2           # owlv2 | grounding_dino | fake (tests only)
+    device: auto             # auto picks cuda when available, else cpu
+    depth_mode: sensor       # sensor (RGB-D camera) | monocular | none
+    score_threshold: 0.2
+    watch_labels: [person, dog]
+    watch_rate_hz: 2.0
     rgb_topic: /ascamera/camera_publisher/rgb0/image
-    use_camera: true
+    depth_topic: /ascamera/camera_publisher/depth0/image_raw
+    camera_info_topic: /ascamera/camera_publisher/rgb0/camera_info
 
 camera_watch_node:
   ros__parameters:

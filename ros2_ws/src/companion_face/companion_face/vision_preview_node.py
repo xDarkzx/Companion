@@ -50,7 +50,7 @@ def ros_image_to_surface(msg: Image):
 
 
 class VisionPreviewNode(Node):
-    """Show live camera frames with YOLO detection labels (PC dev only)."""
+    """Show live camera frames with watch-list detection labels (PC dev only)."""
 
     def __init__(self) -> None:
         """Subscribe to camera + detections and cache the latest samples."""

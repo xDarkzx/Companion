@@ -35,9 +35,7 @@ mic_deps_install
 touch "$ROOT/.desktop_deps_ok"
 
 if [[ "$WITH_VISION" == "true" ]]; then
-  python3 -m pip install --break-system-packages ultralytics opencv-python-headless
-  echo ""
-  echo "Optional: bash scripts/desktop_download_yolo.sh"
+  python3 -m pip install --break-system-packages -e "$ROOT/ros2_ws/src/companion_vision[models]"
 fi
 
 echo ""

@@ -1,4 +1,4 @@
-"""Integration test: detector_node reacts to published camera frames."""
+"""Integration test: the watch list reports waiting, then what the camera sees."""
 import time
 import unittest
 
@@ -20,13 +20,14 @@ def generate_test_description():
         launch.LaunchDescription([
             launch_ros.actions.Node(
                 package='companion_perception',
-                executable='detector_node',
-                name='detector_node',
+                executable='grounded_detector_node',
+                name='grounded_detector_node',
                 parameters=[{
-                    'model_path': '',
-                    'publish_rate_hz': 2.0,
-                    'use_camera': True,
-                    'source_label': 'stub',
+                    'backend': 'fake',
+                    'device': 'cpu',
+                    'depth_mode': 'none',
+                    'watch_labels': ['person'],
+                    'watch_rate_hz': 2.0,
                 }],
             ),
             launch_testing.actions.ReadyToTest(),
@@ -36,7 +37,7 @@ def generate_test_description():
 
 
 class TestDetectorCameraFrame(unittest.TestCase):
-    """Camera frames must change idle → camera_ready in stub mode."""
+    """Watch batches must go from waiting_for_camera to the detected label."""
 
     @classmethod
     def setUpClass(cls):
@@ -66,13 +67,14 @@ class TestDetectorCameraFrame(unittest.TestCase):
         """Destroy the listener node."""
         self.node.destroy_node()
 
-    def test_camera_frame_switches_from_idle_to_ready(self):
-        """Without YOLO, receiving RGB must publish camera_ready."""
+    def test_camera_frame_switches_from_waiting_to_detected(self):
+        """Before frames the batch says waiting; after a frame it names the person."""
         self.assertTrue(
             wait_for_subscribers(self.image_pub),
-            'detector_node never subscribed to RGB topic',
+            'grounded_detector_node never subscribed to RGB topic',
         )
         warm_up_dds(self.node, seconds=2.5)
+        self.assertIn('waiting_for_camera', self.labels)
 
         frame = Image()
         frame.height = 2
@@ -86,11 +88,11 @@ class TestDetectorCameraFrame(unittest.TestCase):
         while time.time() < end:
             self.image_pub.publish(frame)
             rclpy.spin_once(self.node, timeout_sec=0.2)
-            if 'camera_ready' in self.labels:
+            if 'person' in self.labels:
                 ok = True
                 break
 
         self.assertTrue(
             ok,
-            f'expected camera_ready after frame, got labels={self.labels}',
+            f'expected person after frame, got labels={self.labels}',
         )

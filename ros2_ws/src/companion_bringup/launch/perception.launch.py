@@ -23,8 +23,8 @@ def generate_launch_description():
         ),
         Node(
             package='companion_perception',
-            executable='detector_node',
-            name='detector_node',
+            executable='grounded_detector_node',
+            name='grounded_detector_node',
             parameters=[perception_cfg],
             output='screen',
             condition=IfCondition(enable),
