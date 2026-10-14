@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from companion_vision.detector import finalize, normalize_queries
+from companion_vision.detector import DEFAULT_TOP_K, finalize, normalize_queries
 from companion_vision.types import Box, Detection2D
 import numpy as np
 
@@ -33,7 +33,12 @@ class GroundingDinoDetector:
     name = 'grounding_dino'
 
     def __init__(
-        self, *, device: str, score_threshold: float, revision: str | None = None
+        self,
+        *,
+        device: str,
+        score_threshold: float,
+        revision: str | None = None,
+        top_k: int = DEFAULT_TOP_K,
     ) -> None:
         """Load the processor and model weights at a pinned revision."""
         import torch
@@ -43,6 +48,7 @@ class GroundingDinoDetector:
         self._torch = torch
         self._device = torch.device(device)
         self._threshold = score_threshold
+        self._top_k = top_k
         self._processor = AutoProcessor.from_pretrained(MODEL_ID, revision=rev)
         model = AutoModelForZeroShotObjectDetection.from_pretrained(MODEL_ID, revision=rev)
         self._model = model.to(self._device).eval()
@@ -87,4 +93,4 @@ class GroundingDinoDetector:
                 x0, y0, x1, y1 = (float(v) for v in box.tolist())
                 clipped = Box(x0, y0, max(x0, x1), max(y0, y1)).clip(width, height)
                 found.append(Detection2D(label, float(score), clipped))
-        return finalize(found, self._threshold)
+        return finalize(found, self._threshold, self._top_k)

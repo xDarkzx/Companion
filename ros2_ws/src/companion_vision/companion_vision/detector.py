@@ -63,6 +63,7 @@ def load_detector(
     device: str,
     score_threshold: float = DEFAULT_SCORE_THRESHOLD,
     revision: str | None = None,
+    top_k: int = DEFAULT_TOP_K,
 ) -> Detector:
     """Build the named backend, raising DetectorLoadError with the cause if it cannot load."""
     if name == 'fake':
@@ -76,6 +77,7 @@ def load_detector(
     else:
         raise DetectorLoadError(f'unknown detector backend: {name!r}')
     try:
-        return backend(device=device, score_threshold=score_threshold, revision=revision)
+        return backend(
+            device=device, score_threshold=score_threshold, revision=revision, top_k=top_k)
     except (ImportError, OSError, ValueError) as exc:
         raise DetectorLoadError(f'{name} failed to load: {exc}') from exc
