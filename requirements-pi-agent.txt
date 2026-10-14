@@ -1,7 +1,0 @@
-# Optional Pi / agent Python deps (install on Pi only, not required for colcon test)
-
-# NASA ROSA — LLM agent for ROS 2 Jazzy (Phase 3)
-# jpl-rosa>=1.0.10
-
-# Local LLM backend (optional)
-# ollama  # system package, not pip
