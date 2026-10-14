@@ -31,3 +31,16 @@ def test_backend_finds_both_cats(backend):
     assert len(cats) >= 2
     for expected in (LEFT_CAT, RIGHT_CAT):
         assert max(c.box.iou(expected) for c in cats) > 0.7
+
+
+@pytest.mark.models
+def test_monocular_depth_is_metric_and_matches_the_image_size():
+    import torch
+
+    from companion_vision.depth import load_depth
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    rgb = coco_cats()
+    depth = load_depth('monocular', device=device).depth(rgb, None)
+    assert depth.shape == rgb.shape[:2]
+    assert 0.1 < float(np.median(depth)) < 20.0
