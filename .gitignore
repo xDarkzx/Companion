@@ -26,3 +26,4 @@ ros2_ws/src/companion_voice/assets/phrases/*.wav
 
 # Tooling scratch
 .superpowers/
+*.egg-info/

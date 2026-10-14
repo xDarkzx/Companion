@@ -41,6 +41,14 @@ class Box:
         """Centre point (u, v) in pixels."""
         return ((self.x0 + self.x1) / 2.0, (self.y0 + self.y1) / 2.0)
 
+    def iou(self, other: Box) -> float:
+        """Intersection over union with another box (0.0 when they do not overlap)."""
+        ix = max(0.0, min(self.x1, other.x1) - max(self.x0, other.x0))
+        iy = max(0.0, min(self.y1, other.y1) - max(self.y0, other.y0))
+        inter = ix * iy
+        union = self.area + other.area - inter
+        return inter / union if union > 0.0 else 0.0
+
     def clip(self, width: int, height: int) -> Box:
         """Return the part of the box that lies inside a width x height image."""
         x0 = min(max(self.x0, 0.0), float(width))
