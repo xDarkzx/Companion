@@ -14,6 +14,6 @@ tts_node:
     output_device: ""       # ALSA playback device — empty = default
     piper_model: ""
 
-# Recommended hardware (see docs/VOICE_HARDWARE.md):
+# Recommended hardware (see docs/HARDWARE.md):
 #   WonderEcho Pro — Hiwonder USB mic+speaker (MentorPi kit)
 #   ReSpeaker XVF3800 USB — 4-mic array + external speaker

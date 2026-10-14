@@ -55,6 +55,8 @@ jobs:
         run: python -m pytest eval -q
       - name: docs/EVALUATION.md matches eval/results
         run: python eval/report.py --check
+      - name: docs/ARCHITECTURE.md matches the contracts
+        run: python tools/gen_architecture_diagram.py --check
 
   security:
     name: Secret scan

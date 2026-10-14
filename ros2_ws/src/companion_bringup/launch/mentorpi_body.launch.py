@@ -43,7 +43,7 @@ def generate_launch_description():
         )
         actions.append(
             ExecuteProcess(
-                cmd=['echo', 'See docs/DEPLOY_MENTORPI.md'],
+                cmd=['echo', 'See docs/HARDWARE.md'],
                 output='screen',
             )
         )

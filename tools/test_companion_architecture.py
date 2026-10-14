@@ -1,6 +1,6 @@
 """Strict architecture contract tests — ground truth enforcement for Companion.
 
-These tests prevent drift from docs/ARCHITECTURE_CONTRACTS.md, ROS 2 Jazzy
+These tests prevent drift from tools/companion_contracts.py, ROS 2 Jazzy
 guidelines (CLAUDE.md), and the message contracts in companion_interfaces.
 """
 from __future__ import annotations
@@ -86,7 +86,7 @@ def test_nav_status_module_matches_contracts(src_root: Path):
 
 
 def test_shipped_places_yaml_matches_documentation(src_root: Path):
-    """config/places.yaml must match docs/HUMAN_INTERFACE.md coordinates."""
+    """config/places.yaml must match the reference coordinates in the contracts."""
     sys.path.insert(0, str(src_root / 'companion_memory'))
     from companion_memory.places_store import load_places  # noqa: WPS433
 

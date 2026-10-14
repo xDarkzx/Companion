@@ -1,24 +1,26 @@
-# Testing Strategy
+# Testing strategy
 
-Companion uses a **three-tier test pyramid**. Lint tests guard style; **behavioral tests
-guard the product**. If behavioral tests pass, the robot pipeline works as designed.
-
-Run everything:
+Lint tests guard style; **behavioural tests guard the product**. The ROS tiers below run in CI
+in a clean ROS 2 Jazzy container on every pull request, and locally with one command:
 
 ```bash
-bash scripts/verify_all.sh
+bash scripts/docker_verify.sh     # or, on a machine with ROS 2 Jazzy: bash scripts/verify_all.sh
 ```
+
+The vision library and the evaluation harness have their own tier (Tier 4), which needs no ROS.
 
 ---
 
 ## Tier 0 — Architecture contracts (anti-drift, runs first)
 
-Enforced by `tools/test_companion_architecture.py` against
-`docs/ARCHITECTURE_CONTRACTS.md` and `tools/companion_contracts.py`.
+Enforced by the tests in `tools/` against the registry in `tools/companion_contracts.py`.
 
 | Check | What it prevents |
 |-------|------------------|
 | Topic namespace + message types | Wrong msg on `/companion/*` topics |
+| Service contracts (`test_service_contracts.py`) | Unregistered, mistyped or orphaned services |
+| Generated architecture diagram | `docs/ARCHITECTURE.md` drifting from the registry |
+| Licence metadata (`test_package_metadata.py`) | A package declaring a different licence |
 | Publisher/subscriber package map | Nodes bypassing layer boundaries |
 | Launch executable registry | Launch files referencing nonexistent nodes |
 | 500-line soft / 800-line hard cap | Monolithic files |
@@ -63,7 +65,7 @@ These do **not** prove the robot understands commands or navigates correctly.
 
 ## Tier 2 — Unit / contract tests (pure logic, no ROS graph)
 
-Tests run in WSL without hardware. They validate **contracts** the nodes rely on.
+These need no ROS graph and no hardware. They validate the **contracts** the nodes rely on.
 
 | Module | Test file | What must never break |
 |--------|-----------|------------------------|
@@ -95,7 +97,12 @@ These spin **actual ROS 2 nodes** and assert **message flows** on production top
 | `test_vision_hint_blocked_during_nav` | agent + nav_bridge | Hints ignored during active plan |
 | `test_follow_publishes_goal` | nav_bridge | Follow + person → `/goal_pose` at anchor |
 | `test_patrol_cycles_waypoints` | nav_bridge | Patrol → kitchen then bedroom goals |
-| `test_detector_publishes` | detector_node | `DetectionBatch` on `/companion/detections` |
+| `test_find_object_service` | grounded_detector_node (fake backend) | FindObject: no frame, found at 1.5 m in 3D, bad query, no match, answer after a 50-frame burst |
+| `test_where_is_flow` | agent + grounded_detector_node | "where is the mug" → spoken distance and direction; unknown object → "can't see" |
+| `test_where_is_without_camera` | agent | No perception running → "I can't check my camera right now" within the timeout |
+| `test_detector_load_failure` | grounded_detector_node | A backend that cannot load logs `DetectorLoadError` and exits with code 1 |
+| `test_detector_camera_frame` | grounded_detector_node | Watch batches go from `waiting_for_camera` to the detected label |
+| `test_remember_fact_flow` | agent | A remembered fact is retrieved and spoken back |
 | `test_behavior_emotion_contract` | behavior_controller | Every behavior → correct `RobotEmotion` |
 | `test_agent_tts` | agent | Commands → `/companion/tts_request` |
 | `test_empathy_flow` | empathy_node | `HumanEmotion` sad → `RobotEmotion` love |
@@ -109,9 +116,23 @@ These spin **actual ROS 2 nodes** and assert **message flows** on production top
                                       → /companion/robot_emotion
                                       → /companion/agent_state
 /companion/detection_hint  → agent (when react_to_vision) → behavior_request
-/companion/detections      → detector_node → detection_hint (person/dog)
+/companion/detections      → grounded_detector_node (watch list) → detection_hint (person/dog)
+/companion/find_object     → grounded_detector_node → found, reason, 2D + 3D detections
 /companion/human_emotion   → empathy → /companion/robot_emotion
 ```
+
+---
+
+## Tier 4 — Vision library and evaluation (no ROS)
+
+| Suite | Runs where | What it proves |
+|---|---|---|
+| `companion_vision/test` (fakes) | CI `vision` job, Python 3.12, CPU | Box maths, localisation (missing or invalid depth gives no position), detector contract, pipeline ordering and depth alignment |
+| `companion_vision/test/test_backends_models.py` | `COMPANION_MODEL_TESTS=1` on a GPU machine | Real OWLv2 and Grounding DINO find both cats in COCO image 39769 at IoU > 0.7 against the ground truth; monocular depth is metric and the right size |
+| `eval/test_*.py` | CI `vision` job | COCO conversion, NYU ground-truth extraction, matching, depth metrics, report rendering |
+| `eval/report.py --check` | CI `vision` job | `docs/EVALUATION.md` matches the committed result files |
+
+The benchmarks themselves are described in [EVALUATION.md](EVALUATION.md).
 
 ---
 
@@ -134,10 +155,10 @@ exercise system behavior.
 
 ## Pi / hardware
 
-WSL integration tests cover the **software contract**. On Pi, additionally verify:
+The integration tests cover the **software contract**. On a Pi, also verify:
 
 - `ros2 launch companion_bringup mentorpi_deluxe.launch.py`
 - USB voice + ascamera topics (manual smoke test)
 - Nav2 with `simulated_travel_sec: 0`
 
-Hardware tests are documented in [MENTORPI_DELUXE.md](MENTORPI_DELUXE.md).
+Hardware status and deployment are documented in [HARDWARE.md](HARDWARE.md).

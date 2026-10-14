@@ -19,6 +19,6 @@ bash scripts/fetch_robot_sfx.sh
 | `yawn.wav` | Sleepy |
 | `wake.wav` | Boot (optional) |
 
-**Speech** lives in `companion_voice/assets/phrases/` — see `docs/REPLIES.md`.
+**Speech** lives in `companion_voice/assets/phrases/` — the phrase keys are listed in `companion_voice/reply_catalog.py`.
 
 Missing files use a simple synthesized bleep.

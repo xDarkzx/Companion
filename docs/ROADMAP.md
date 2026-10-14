@@ -1,81 +1,32 @@
-# Companion Roadmap
+# Roadmap
 
-_Last updated: 2026-05-27_
+## Done (v0.1)
 
-## Vision
+- **ROS 2 Jazzy brain.** Eleven packages talk only through typed, CI-checked contracts:
+  agent, memory, behaviours, body (Nav2 bridge), face, voice, empathy rules and perception.
+- **Language-driven perception.** Find any named object, place it in 3D from an RGB-D camera
+  or a monocular estimate, and answer "where is X" by voice. Benchmarked on COCO and NYU
+  Depth V2.
+- **Engineering.** One-command Docker gate, CI on every pull request, an architecture diagram
+  generated from the contracts, evaluation results kept in sync with the docs, and ADRs.
 
-An **emotion-aware AI robot companion** with a real personality. It expresses
-feelings on an animated 8-bit face (blink, cry, get angry, show art, "handshake"
-greetings) and makes sounds. Its **MOAT** (the differentiator): it perceives the
-*human's* emotional state and responds with empathy — comforting you when you're
-sad, cheering you up, celebrating with you.
+## Next
 
-## Guiding architecture
+1. **Run on the robot.** Bring the stack up on a MentorPi, map a home, and record Pi CPU
+   latency alongside the results in [EVALUATION.md](EVALUATION.md).
+2. **Calibrate monocular depth per camera.** One reading against a known distance gives a
+   scale factor. On NYU a single median scale cuts AbsRel from 0.22 to 0.08 (see
+   EVALUATION.md).
+3. **Faster perception on the Pi.** Compile the detector for a Hailo-8 accelerator, or use a
+   smaller detector for the watch list and keep OWLv2 for explicit questions.
+4. **Act on what it finds.** Turn a located object into a Nav2 goal ("go to the mug"), using
+   the camera-to-map transform.
+5. **Spoken empathy without face analysis.** Respond to what people say about how they feel.
+   Facial emotion recognition stays out
+   ([ADR 0005](adr/0005-defer-human-emotion-recognition.md)).
 
-- **Pi 5 = the brain** (ROS 2, AI, face, empathy). Always.
-- **Body is swappable** (hexapod / robot dog / ESP32-driven). It's just a
-  "locomotion node" that plugs into the same backbone.
-- **Everything is a ROS 2 node** that talks over **typed message contracts**, so any
-  subsystem can be built, tested, and replaced independently.
+## Out of scope
 
-## Hardware
-
-| Item | Status |
-|------|--------|
-| Raspberry Pi 5 | ✅ have |
-| GPIO LCD screen (for the face) | ✅ have (testing) |
-| 13-TOPS Hailo AI HAT+ (vision) | 🛒 planned (Phase 3) |
-| **Body: Freenove Robot Dog Kit for Pi** (walking, self-balancing, face recognition, ball tracing, ultrasonic) | ✅ **decided** (buying) |
-| Vision camera (upgrade) | 🛒 planned (Phase 3) |
-| LCD screen for the face (upgrade) | 🛒 planned (Phase 2) |
-| ESP32 secondary screen | 🤔 maybe |
-| Speaker / mic | 🛒 planned (audio) |
-
-> **Body decision (2026-05-27):** the **Freenove Robot Dog Kit** (Raspberry-Pi-driven)
-> is the chosen body — the least-glue option, since the Pi 5 stays the brain and drives
-> the legs directly. Upgrades to follow: vision camera, LCD face screen, AI hat. This
-> choice required **no architectural change** — the body is just a locomotion node. A
-> future swap (e.g. an ESP32 body via `micro-ROS`) remains possible without touching the
-> brain/face.
-
-## The subsystems
-
-| # | Subsystem | Role | Phase |
-|---|-----------|------|-------|
-| A | **Face** | Render the robot's emotion on the LCD | 2 |
-| B | **Brain** | Decide robot emotion; empathy logic (the MOAT) | 1 (stub) → 2 → 3 |
-| C | **Perception** | Sense human emotion (camera/voice) + sensors (ToF/ultrasonic) | 3 |
-| D | **Locomotion** | Move the body (legs/servos) | later |
-| E | **Audio** | Sounds + voice | later |
-| F | **Secondary display / ESP32** | Offload/extend the face | later |
-
-## Phases
-
-### Phase 1 — ROS 2 Foundation  ← _current_
-Build the clean, modular ROS 2 backbone everything plugs into, with quality
-guardrails baked in. Two stub nodes prove the pipeline end-to-end (no hardware).
-- **Spec:** `docs/superpowers/specs/2026-05-27-ros2-foundation-design.md`
-- **Exit criteria:** `colcon build` clean → `colcon test` green (lint + 800-line
-  guard + unit + integration) → `ros2 launch companion_bringup demo.launch.py`
-  shows the Brain emitting emotions and the Face logging them live → committed to git.
-
-### Phase 2 — Emotional Face
-Replace the face stub with a real animated 8-bit face on the LCD (blink, cry, angry,
-happy, art, greetings). Driven entirely by the `RobotEmotion` topic from Phase 1.
-- **Exit criteria:** the LCD shows distinct, smooth animated emotions in response to
-  published `RobotEmotion` messages.
-
-### Phase 3 — AI + Sensors + Empathy (the MOAT)
-Add the kit's sensors (camera, ToF, ultrasonic) and the AI: perceive the *human's*
-emotion (`HumanEmotion`), feed it to a real Brain that reasons with empathy and
-drives the face/body. Vision likely uses the 13-TOPS AI HAT+.
-- **Exit criteria:** the robot detects a human's emotional state and responds with a
-  fitting, caring reaction.
-
-### Phase 4 — Model Fine-Tuning Pipeline
-A repeatable pipeline to collect data and fine-tune a model so the companion grows
-more capable and personal over time.
-- **Exit criteria:** a documented, reproducible pipeline that produces an improved
-  model the robot can run.
-
-> Each phase gets its **own spec → plan → build cycle.** We do not skip ahead.
+- Training or fine-tuning models.
+- Cloud services. Everything runs on the robot or a local machine.
+- Motor control. That stays in the body's firmware and Nav2.
